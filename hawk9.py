@@ -32,6 +32,8 @@ FATOR_ESCALA = 0.001
 VISCOSIDADE_AR = 1.2
 RESISTENCIA_AR = VISCOSIDADE_AR / 12 #na verdade é b
 
+VELOCIDADE_INICIAL = 2000
+
 """
 A function that can be used to write text on our screen and buttons
 """
@@ -40,6 +42,23 @@ def draw_text(text, font, color, surface, x, y):
     textrect = textobj.get_rect()
     textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
+
+def draw_back_to_menu_button(screen):
+    button_width, button_height = 150, 30
+    button_x = 10
+    button_y = 100  # Position it below the game-over message
+    button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
+
+    # Draw the button
+    pygame.draw.rect(screen, (0, 0, 255), button_rect)  # Blue color for the button
+
+    # Draw the text on the button
+    font = pygame.font.Font(None, 25)
+    text_surface = font.render("Voltar ao Menu", True, (255, 255, 255))  # White text
+    text_rect = text_surface.get_rect(center=button_rect.center)
+    screen.blit(text_surface, text_rect)
+
+    return button_rect
 
 class Cloud:
     def __init__(self, x, y):
@@ -96,13 +115,13 @@ class Rocket:
         self.x = LARGURA / 2
         self.y = ALTURA / 4
         self.angulo = random.uniform(-(math.pi)/4 ,(math.pi)/4)  # Angle in radians
-        self.rapidez = random.uniform(3000, 6000)
+        self.rapidez = VELOCIDADE_INICIAL
         self.vx = math.cos(self.angulo + (math.pi/2)) * self.rapidez     # Horizontal velocity
         self.vy = math.sin(self.angulo + (math.pi/2)) * self.rapidez     # Vertical velocity
         self.x -= self.vx * 100 * FATOR_ESCALA
         self.y -= self.vy * 100 * FATOR_ESCALA
         self.combustivel = MAX_COMBUSTIVEL
-        self.massa = 10 + self.combustivel
+        self.massa = 50 + self.combustivel*0.8
         self.cor = BRANCO
         self.colidiu = False
         self.impulsionando = False
@@ -119,6 +138,7 @@ class Rocket:
             self.impulsionando = True
         else:
             self.impulsionando = False
+            self.ingnited = False
 
     def update_color(self, color):
         self.cor = color
@@ -261,6 +281,8 @@ def game():
     landing_pad = pygame.Rect(LARGURA / 2 - 50, ALTURA - 10, 100, 10)
     game_over = False
     landed = False
+    global click
+    click = False
 
     while running:
         screen.fill(PRETO)
@@ -270,6 +292,10 @@ def game():
                 running = False
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 rocket.aplicar_impulso()
+            
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
 
         
         keys = pygame.key.get_pressed()
@@ -330,6 +356,14 @@ def game():
             rocket.desenhar_trajetoria(screen)
             rocket.draw_flame(screen)
             rocket.draw(screen)
+            # Draw the "Back to Menu" button
+            back_button_rect = draw_back_to_menu_button(screen)
+
+            # Check if the back button was clicked
+            mx, my = pygame.mouse.get_pos()
+            if back_button_rect.collidepoint(mx, my):
+                if click:
+                    main_menu()
         draw_landing_pad(screen)
 
         if game_over:
