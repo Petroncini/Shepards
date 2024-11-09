@@ -362,26 +362,6 @@ def game():
 
     pygame.quit()
 
-"""
-This function is called when the "OPTIONS" button is clicked.
-"""
-def options():
-    running = True
-    while running:
-        screen.fill((0,0,0))
- 
-        draw_text('OPTIONS SCREEN', font_text, (255, 255, 255), screen, 20, 20)
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    running = False
-       
-        pygame.display.update()
-        clock.tick(60)
-
 class Star:
     def __init__(self):
         self.x = random.randint(0, LARGURA)
@@ -403,6 +383,7 @@ class Star:
 def main_menu():
     # Create a list of stars
     stars = [Star() for _ in range(80)]  # 100 stars
+    global click
     click = False
 
     while True:
@@ -431,33 +412,19 @@ def main_menu():
             button_width,
             button_height
         )
-        button_2 = pygame.Rect(
-            LARGURA // 2 - button_width // 2,
-            ALTURA // 2 - button_height // 2 + button_spacing,
-            button_width,
-            button_height
-        )
 
         # Button interaction
         if button_1.collidepoint((mx, my)):
             if click:
                 game()
-        if button_2.collidepoint((mx, my)):
-            if click:
-                options()
 
         # Draw the buttons
         pygame.draw.rect(screen, (255, 0, 0), button_1)
-        pygame.draw.rect(screen, (255, 0, 0), button_2)
 
         # Center the text on the buttons
         play_text_surface = font_text.render('JOAGR', True, (255, 255, 255))
         play_text_rect = play_text_surface.get_rect(center=button_1.center)
         screen.blit(play_text_surface, play_text_rect)
-
-        options_text_surface = font_text.render('OPÇÕES', True, (255, 255, 255))
-        options_text_rect = options_text_surface.get_rect(center=button_2.center)
-        screen.blit(options_text_surface, options_text_rect)
 
         for event in pygame.event.get():
             if event.type == QUIT:
