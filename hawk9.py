@@ -1,13 +1,22 @@
 import math
 import random
+import sys
 
 import pygame
+from pygame.locals import *
 
 pygame.init()
 
 LARGURA, ALTURA = 800, 600
 screen = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption("Rocket Landing Game")
+#setting font settings
+font_text = pygame.font.SysFont(None, 30)
+font_h1 = pygame.font.SysFont(None, 60)
+clock = pygame.time.Clock()
+
+# A variable to check for the status later
+click = False
 
 PRETO = (0, 0, 0)
 BRANCO = (255, 255, 255)
@@ -22,6 +31,15 @@ MAX_COMBUSTIVEL = 100
 FATOR_ESCALA = 0.001
 VISCOSIDADE_AR = 1.2
 RESISTENCIA_AR = VISCOSIDADE_AR / 12 #na verdade é b
+
+"""
+A function that can be used to write text on our screen and buttons
+"""
+def draw_text(text, font, color, surface, x, y):
+    textobj = font.render(text, 1, color)
+    textrect = textobj.get_rect()
+    textrect.topleft = (x, y)
+    surface.blit(textobj, textrect)
 
 class Cloud:
     def __init__(self, x, y):
@@ -237,8 +255,7 @@ def end_game(rocket, message, exploded):
     rocket.colidiu = True
 
 
-def main():
-    clock = pygame.time.Clock()
+def game():
     rocket = Rocket()
     running = True
     landing_pad = pygame.Rect(LARGURA / 2 - 50, ALTURA - 10, 100, 10)
@@ -327,7 +344,7 @@ def main():
                     screen.blit(text, text_rect)
                     pygame.display.flip()
                     pygame.time.delay(2000)
-                    main()
+                    main_menu()
             else:
                 font = pygame.font.Font(None, 74)
                 text = font.render(rocket.message, True, BRANCO)
@@ -335,7 +352,7 @@ def main():
                 screen.blit(text, text_rect)
                 pygame.display.flip()
                 pygame.time.delay(2000)
-                main()
+                main_menu()
 
 
 
@@ -345,5 +362,119 @@ def main():
 
     pygame.quit()
 
+"""
+This function is called when the "OPTIONS" button is clicked.
+"""
+def options():
+    running = True
+    while running:
+        screen.fill((0,0,0))
+ 
+        draw_text('OPTIONS SCREEN', font_text, (255, 255, 255), screen, 20, 20)
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+       
+        pygame.display.update()
+        clock.tick(60)
+
+class Star:
+    def __init__(self):
+        self.x = random.randint(0, LARGURA)
+        self.y = random.randint(-ALTURA, 0)  # Start above the screen
+        self.size = random.randint(1, 3)
+        self.speed = random.uniform(1, 2)  # Falling speed
+
+    def update(self):
+        self.y += self.speed
+        if self.y > ALTURA:  # Reset the star to the top when it reaches the bottom
+            self.y = random.randint(-ALTURA, 0)
+            self.x = random.randint(0, LARGURA)
+            self.size = random.randint(1, 3)
+            self.speed = random.uniform(1, 3)
+
+    def draw(self, surface):
+        pygame.draw.circle(surface, (255, 255, 200), (self.x, int(self.y)), self.size)
+
+def main_menu():
+    # Create a list of stars
+    stars = [Star() for _ in range(80)]  # 100 stars
+    click = False
+
+    while True:
+        screen.fill((0, 0, 0))  # Black background for night sky
+
+        # Update and draw each star
+        for star in stars:
+            star.update()
+            star.draw(screen)
+
+        # Draw the centered menu title
+        title_text = 'Rocket Landing Game'
+        title_surface = font_h1.render(title_text, True, BRANCO)
+        title_rect = title_surface.get_rect(center=(LARGURA // 2, ALTURA // 4))
+        screen.blit(title_surface, title_rect)
+
+        mx, my = pygame.mouse.get_pos()
+
+        # Define button dimensions and positions
+        button_width, button_height = 200, 50
+        button_spacing = 80  # Space between buttons
+
+        button_1 = pygame.Rect(
+            LARGURA // 2 - button_width // 2,
+            ALTURA // 2 - button_height // 2,
+            button_width,
+            button_height
+        )
+        button_2 = pygame.Rect(
+            LARGURA // 2 - button_width // 2,
+            ALTURA // 2 - button_height // 2 + button_spacing,
+            button_width,
+            button_height
+        )
+
+        # Button interaction
+        if button_1.collidepoint((mx, my)):
+            if click:
+                game()
+        if button_2.collidepoint((mx, my)):
+            if click:
+                options()
+
+        # Draw the buttons
+        pygame.draw.rect(screen, (255, 0, 0), button_1)
+        pygame.draw.rect(screen, (255, 0, 0), button_2)
+
+        # Center the text on the buttons
+        play_text_surface = font_text.render('JOAGR', True, (255, 255, 255))
+        play_text_rect = play_text_surface.get_rect(center=button_1.center)
+        screen.blit(play_text_surface, play_text_rect)
+
+        options_text_surface = font_text.render('OPÇÕES', True, (255, 255, 255))
+        options_text_rect = options_text_surface.get_rect(center=button_2.center)
+        screen.blit(options_text_surface, options_text_rect)
+
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
+        pygame.display.update()
+        clock.tick(60)
+
+
+
 if __name__ == "__main__":
-    main()
+    main_menu()
