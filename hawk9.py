@@ -16,7 +16,7 @@ VERMELHO = (255, 0, 0)
 AZUL = (0, 0, 255)
 
 GRAVIDADE = 9.8  #m/s^2
-IMPULSO = 5000    #kg*m/s^2
+IMPULSO = 500    #kg*m/s^2
 RAPIDEZ_ROTACAO = 0.025 #RAD/s
 MAX_COMBUSTIVEL = 100
 FATOR_ESCALA = 0.001
@@ -78,7 +78,7 @@ class Rocket:
         self.x = LARGURA / 2
         self.y = ALTURA / 4
         self.angulo = random.uniform(-(math.pi)/4 ,(math.pi)/4)  # Angle in radians
-        self.rapidez = random.uniform(3000, 6000)
+        self.rapidez = random.uniform(1000, 1500)
         self.vx = math.cos(self.angulo + (math.pi/2)) * self.rapidez     # Horizontal velocity
         self.vy = math.sin(self.angulo + (math.pi/2)) * self.rapidez     # Vertical velocity
         self.x -= self.vx * 100 * FATOR_ESCALA
@@ -112,16 +112,18 @@ class Rocket:
         self.angulo += RAPIDEZ_ROTACAO
 
     def update(self):
+        dt = pygame.time.get_ticks() / 1000
+
         if not self.colidiu:
-            self.vy += GRAVIDADE
+            self.vy += GRAVIDADE * dt
 
-            self.x += self.vx * FATOR_ESCALA
-            self.y += self.vy * FATOR_ESCALA
+            self.x += self.vx * FATOR_ESCALA * dt
+            self.y += self.vy * FATOR_ESCALA * dt
 
-            forca_viscosa_x = -self.vx * RESISTENCIA_AR
-            forca_viscosa_y = -self.vy * RESISTENCIA_AR
-            self.vx += forca_viscosa_x / self.massa
-            self.vy += forca_viscosa_y / self.massa
+            forca_viscosa_x = -self.vx * RESISTENCIA_AR * dt
+            forca_viscosa_y = -self.vy * RESISTENCIA_AR * dt
+            self.vx += (forca_viscosa_x / self.massa) * dt
+            self.vy += (forca_viscosa_y / self.massa) * dt
 
 
             if self.x < 0:
@@ -136,13 +138,13 @@ class Rocket:
 
             if self.impulsionando and not self.colidiu:
                 if self.combustivel > 0:
-                    forca_x = IMPULSO * self.acelerador * math.sin(self.angulo)
-                    forca_y = -IMPULSO * self.acelerador * math.cos(self.angulo)
+                    forca_x = IMPULSO * self.acelerador * math.sin(self.angulo) * dt
+                    forca_y = -IMPULSO * self.acelerador * math.cos(self.angulo) * dt
                     
-                    self.vx += forca_x / self.massa
-                    self.vy += forca_y / self.massa
-                    self.combustivel -= 0.5 * self.acelerador
-                    self.massa -= 0.5 * self.acelerador
+                    self.vx += (forca_x / self.massa) * dt
+                    self.vy += (forca_y / self.massa) * dt
+                    self.combustivel -= 0.05 * self.acelerador * dt
+                    self.massa -= 0.05 * self.acelerador * dt
                     self.impulsionando = True
 
 
