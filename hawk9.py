@@ -25,14 +25,14 @@ VERMELHO = (255, 0, 0)
 AZUL = (0, 0, 255)
 
 GRAVIDADE = 9.8  #m/s^2
-IMPULSO = 500    #kg*m/s^2
+IMPULSO = 500000    #kg*m/s^2
 RAPIDEZ_ROTACAO = 0.025 #RAD/s
 MAX_COMBUSTIVEL = 100
-FATOR_ESCALA = 0.001
-VISCOSIDADE_AR = 1.2
+FATOR_ESCALA = 0.01
+VISCOSIDADE_AR = 0
 RESISTENCIA_AR = VISCOSIDADE_AR / 12 #na verdade é b
 
-VELOCIDADE_INICIAL = 2000
+VELOCIDADE_INICIAL = 10000
 
 """
 A function that can be used to write text on our screen and buttons
@@ -115,15 +115,11 @@ class Rocket:
         self.x = LARGURA / 2
         self.y = ALTURA / 4
         self.angulo = random.uniform(-(math.pi)/4 ,(math.pi)/4)  # Angle in radians
-<<<<<<< HEAD
-        self.rapidez = random.uniform(1000, 1500)
-=======
         self.rapidez = VELOCIDADE_INICIAL
->>>>>>> origin/main
         self.vx = math.cos(self.angulo + (math.pi/2)) * self.rapidez     # Horizontal velocity
         self.vy = math.sin(self.angulo + (math.pi/2)) * self.rapidez     # Vertical velocity
-        self.x -= self.vx * 100 * FATOR_ESCALA
-        self.y -= self.vy * 100 * FATOR_ESCALA
+        self.x -= self.vx * 1 * FATOR_ESCALA
+        self.y -= self.vy * 1 * FATOR_ESCALA
         self.combustivel = MAX_COMBUSTIVEL
         self.massa = 50 + self.combustivel*0.8
         self.cor = BRANCO
@@ -154,7 +150,7 @@ class Rocket:
         self.angulo += RAPIDEZ_ROTACAO
 
     def update(self):
-        dt = pygame.time.get_ticks() / 1000
+        dt = clock.tick(60) / 1000
 
         if not self.colidiu:
             self.vy += GRAVIDADE * dt
@@ -164,8 +160,8 @@ class Rocket:
 
             forca_viscosa_x = -self.vx * RESISTENCIA_AR * dt
             forca_viscosa_y = -self.vy * RESISTENCIA_AR * dt
-            self.vx += (forca_viscosa_x / self.massa) * dt
-            self.vy += (forca_viscosa_y / self.massa) * dt
+            self.vx += (forca_viscosa_x / self.massa)
+            self.vy += (forca_viscosa_y / self.massa)
 
 
             if self.x < 0:
@@ -183,8 +179,8 @@ class Rocket:
                     forca_x = IMPULSO * self.acelerador * math.sin(self.angulo) * dt
                     forca_y = -IMPULSO * self.acelerador * math.cos(self.angulo) * dt
                     
-                    self.vx += (forca_x / self.massa) * dt
-                    self.vy += (forca_y / self.massa) * dt
+                    self.vx += (forca_x / self.massa)
+                    self.vy += (forca_y / self.massa)
                     self.combustivel -= 0.05 * self.acelerador * dt
                     self.massa -= 0.05 * self.acelerador * dt
                     self.impulsionando = True
@@ -283,6 +279,7 @@ def end_game(rocket, message, exploded):
 
 def game():
     rocket = Rocket()
+    print(math.sqrt(rocket.vx**2 + rocket.vy**2))
     running = True
     landing_pad = pygame.Rect(LARGURA / 2 - 50, ALTURA - 10, 100, 10)
     game_over = False
@@ -435,7 +432,7 @@ def main_menu():
             star.draw(screen)
 
         # Draw the centered menu title
-        title_text = 'Rocket Landing Game'
+        title_text = 'Suicide Burn'
         title_surface = font_h1.render(title_text, True, BRANCO)
         title_rect = title_surface.get_rect(center=(LARGURA // 2, ALTURA // 4))
         screen.blit(title_surface, title_rect)
