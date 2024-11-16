@@ -15,8 +15,24 @@ Como sabemos, nosso foquete, assim como os outros corpos nos planetas, sofre o e
 em direção ao solo.
 Tomando um referencial estático no solo e um sistema de cordenadas cartesiano, temos que tal força, em nosso objeto de estudo,
 pode ser representada da seguinte maneira:
-<img alt="Foguete" src="/images/fogeute_gravidade.png">
+<p align="center">
+    <img alt="Foguete" src="/images/foguete_gravidade.png">
+</p>
+Dessa forma, podemos descrever essa força da seguinte maneira em nosso sistema:
+$$\begin{equation}
+\vec{F}_g = - m \cdot g  \hat{j}
+\end{equation}$$
 
+### Força Viscosa
+Agora, outra força que precisamos analisar em nosso sistema é a força viscosa, a qual irá variar de intensidade dependendo da
+atmosfera do planeta e da velocidade do nosso foguete, sendo ela representada assim em nosso sistema de coordenadas:
+<p align="center">
+    <img alt="Foguete" src="/images/foguete_viscosidade.png">
+</p>
+Dessa forma, podemos descrever essa força da seguinte maneira em nosso sistema:
+$$\begin{equation}
+\vec{F}_v = - b \cdot \vec{v}
+\end{equation}$$
 
 
 ## Implementação
