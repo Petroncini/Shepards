@@ -1,3 +1,7 @@
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js">
+</script>
+
 # Pouso do foquete
 
 ## Descrição Básica do Projeto
@@ -29,7 +33,7 @@ atmosfera do planeta e da velocidade do nosso foguete, sendo ela representada as
 <p align="center">
     <img alt="Foguete" src="/images/foguete_viscosidade.png">
 </p>
-Dessa forma, podemos descrever essa força da seguinte maneira em nosso sistema:
+Dessa forma, podemos descrever essa força da seguinte maneira em nosso sistema $oi$:
 $$\begin{equation}
 \vec{F}_v = - b \cdot \vec{v}
 \end{equation}$$
