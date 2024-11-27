@@ -9,8 +9,6 @@ Analisando esse problema, vemos que ele possúi diversas variáveis que podem im
 física, todos esses fatores estão conectados, a massa do combustível afeta a massa total do foguete, que por sua vez impacta
 na velocidade que será expressa, a qual impacta na força viscosa sentida pelo objeto, além de várias outras relações.
 
-## Como Usar
-
 ## Conceitos de Física e Modelo Matemático:
 ### Forças
 #### Força Gravitacional
@@ -192,5 +190,14 @@ z(t) = -k_2k_1(C + t + k_1e^{-t/k_1})
 Também é possível perceber que a equação do movimento no eixo y pode ser resolvido com a mesma equação.
 
 ## Implementação:
+O jogo foi desenvolvido em Python utilizando a biblioteca Pygame, uma ferramenta poderosa e versátil voltada para o desenvolvimento de jogos e aplicações multimídia. Com o Pygame, foi possível criar uma interface gráfica interativa, gerenciar eventos do teclado e mouse e manipular imagens. A biblioteca oferece uma estrutura robusta para o controle de elementos visuais e sonoros, facilitando a construção de experiências imersivas e dinâmicas.
+
+## Como usar:
+- **Instalação e Dependências:** 
+    ```bash
+    pip install pygame
+- **Como jogar**
+
+Para jogar, basta apenas apertar em "JOGAR" na tela inicial. O objetivo principal é pousar o foguete na plataforma verde ao centro, controlando a rotação e o propulsor da nave. Você pode rotacionar o foguete com as setas esquerda e direita do teclado e ativar o propulsor com a tecla espaço. Boa sorte!
 
 ## Referências:
