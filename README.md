@@ -142,11 +142,11 @@ $$\begin{equation}
 Agora, utilizando uma mudança de variável dependente $$v_z$$ para $$u = k_1^{-1}v_x + k_2$$. Vamos calcular $$\dot{v_x}$$ em relação a $$u$$. 
 
 $$\begin{equation}
-\dot{v_x} & = u \cdot k_1 - g 
+\dot{v_x} = u \cdot k_1 - g 
 \end{equation}$$
 
 $$\begin{equation}
-\dot{v_x} & = \dot{u} \cdot k_1 
+\dot{v_x} = \dot{u} \cdot k_1 
 \end{equation}$$
 
 Substituindo esse resultado na equação:
