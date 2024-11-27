@@ -132,10 +132,13 @@ $$\begin{equation}
 \end{equation}$$
 
 Vamos determinar a equação que resolve as EDO's:
+
 Primeiramente podemos reescrever a equação da seguinte forma:
+
 $$\begin{equation}
 \dot{v_x}(t) + \frac{1}{k_1} \cdot {v_x}(t) + k_2 = 0
 \end{equation}$$
+
 Agora, utilizando uma mudança de variável dependente $$v_z$$ para $$u = k_1^{-1}v_x + k_2$$. Vamos calcular $$\dot{v_x}$$ em relação a $$u$$. 
 
 
