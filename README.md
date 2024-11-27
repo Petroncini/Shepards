@@ -141,6 +141,24 @@ $$\begin{equation}
 
 Agora, utilizando uma mudança de variável dependente $$v_z$$ para $$u = k_1^{-1}v_x + k_2$$. Vamos calcular $$\dot{v_x}$$ em relação a $$u$$. 
 
+$$\begin{equation}
+{v_x} & = u \cdot k_1 - g \\
+\dot{v_x} & = \dot{u} \cdot k_1 
+\end{equation}$$
+
+Substituindo esse resultado na equação:
+
+$$\begin{equation}
+\dot{u}k_1 + u = 0 \\
+\text{Agora podemos resolver a EDO} \\
+\frac{du}{dt} + \frac{1}{k_1}u = 0 \\
+\frac{du}{u} = -\frac{1}{k_1}dt \\
+\text{Integrando os dois lados} \\
+\ln{u} = -\frac{t}{k_1} + C' \\
+u(t) = Ce^{-\frac{t}{k_1}} \text{Note que, } C = e^{C'} \\
+\end{equation}$$
+
+
 
 ## Como Usar
 
