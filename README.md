@@ -172,8 +172,22 @@ $$\begin{equation}
 \end{equation}$$
 
 $$\begin{equation}
-u(t) = Ce^{-\frac{t}{k_1}} \text{Note que, } C = e^{C'} 
+u(t) = Ce^{-\frac{t}{k_1}} \text{, note que, } C = e^{C'} 
 \end{equation}$$
+
+Determinamos a equação de $v_z(t)$ como:
+
+$$\begin{equation}
+v_z(t) = -k_2k_1(1-e^{-t/k_1})
+\end{equation}$$
+
+Integrando ambos os lados da equação, conseguimos a equação da trajetória  $$z(t)$$
+
+$$\begin{equation}
+z(t) = -k_2k_1(C + t + k_1e^{-t/k_1})
+\end{equation}$$
+
+Também é possível perceber que a equação do movimento no eixo y pode ser resolvido com a mesma equação.
 
 
 
