@@ -9,6 +9,8 @@ Analisando esse problema, vemos que ele possúi diversas variáveis que podem im
 física, todos esses fatores estão conectados, a massa do combustível afeta a massa total do foguete, que por sua vez impacta
 na velocidade que será expressa, a qual impacta na força viscosa sentida pelo objeto, além de várias outras relações.
 
+## Como Usar
+
 ## Conceitos de Física e Modelo Matemático:
 ### Forças
 #### Força Gravitacional
@@ -189,9 +191,6 @@ z(t) = -k_2k_1(C + t + k_1e^{-t/k_1})
 
 Também é possível perceber que a equação do movimento no eixo y pode ser resolvido com a mesma equação.
 
-
-
-## Como Usar
-
+##Implementação
 
 ## Referências:
