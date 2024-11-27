@@ -149,13 +149,19 @@ $$\begin{equation}
 Substituindo esse resultado na equação:
 
 $$\begin{equation}
-\dot{u}k_1 + u = 0 \\
-\text{Agora podemos resolver a EDO} \\
-\frac{du}{dt} + \frac{1}{k_1}u = 0 \\
-\frac{du}{u} = -\frac{1}{k_1}dt \\
-\text{Integrando os dois lados} \\
-\ln{u} = -\frac{t}{k_1} + C' \\
-u(t) = Ce^{-\frac{t}{k_1}} \text{Note que, } C = e^{C'} \\
+\dot{u}k_1 + u = 0 
+
+\text{Agora podemos resolver a EDO}
+
+\frac{du}{dt} + \frac{1}{k_1}u = 0 
+
+\frac{du}{u} = -\frac{1}{k_1}dt 
+
+\text{Integrando os dois lados} 
+
+\ln{u} = -\frac{t}{k_1} + C' 
+
+u(t) = Ce^{-\frac{t}{k_1}} \text{Note que, } C = e^{C'} 
 \end{equation}$$
 
 
