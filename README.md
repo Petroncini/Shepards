@@ -1,10 +1,10 @@
-# Pouso do foquete
+# Pouso do foguete
 
 ## Descrição Básica do Projeto
-Este projeto é um jogo criado para simular, de forma simplificada, o pouso de um foquete em diversos ambientes. O objetivo
+Este projeto é um jogo criado para simular, de forma simplificada, o pouso de um foguete em diversos ambientes. O objetivo
 é dar ao usuário uma experiência prática dos efeitos de conceitos como: viscosidade, velocidade e aceleração.
-O objetivo do jogo é pousar o foquete, a partir de uma posição X aleatória, na área indicada, tendo que gerenciar o
-combustível e a trajetória do foquete.
+O objetivo do jogo é pousar o foguete, a partir de uma posição X aleatória, na área indicada, tendo que gerenciar o
+combustível e a trajetória do foguete.
 Analisando esse problema, vemos que ele possúi diversas variáveis que podem impactar no resultado final, pois, na
 física, todos esses fatores estão conectados, a massa do combustível afeta a massa total do foguete, que por sua vez impacta
 na velocidade que será expressa, a qual impacta na força viscosa sentida pelo objeto, além de várias outras relações.
@@ -12,7 +12,7 @@ na velocidade que será expressa, a qual impacta na força viscosa sentida pelo 
 ## Conceitos de Física e Modelo Matemático:
 ### Forças
 #### Força Gravitacional
-Como sabemos, nosso foquete, assim como os outros corpos nos planetas, sofre o efeito da força gravitacional, sendo atraído
+Como sabemos, nosso foguete, assim como os outros corpos nos planetas, sofre o efeito da força gravitacional, sendo atraído
 em direção ao solo.
 Tomando um referencial estático no solo e um sistema de cordenadas cartesiano, temos que tal força, em nosso objeto de estudo,
 pode ser representada da seguinte maneira:
@@ -106,11 +106,11 @@ $$\begin{equation}
 \end{equation}$$
 
 $$\begin{equation}
-\text{Assumindo: } k_1 = \frac{b.\sin{\theta}}{m} \text{, } k_2 = \frac{\text{IMPULSO} \cdot \sin{\theta}}{m},
+\text{Assumindo: } k_1 = \frac{m}{b.\sin{\theta}} \text{, } k_2 = -\frac{\text{IMPULSO} \cdot \sin{\theta}}{m},
 \end{equation}$$
 
 $$\begin{equation}
-\ddot{x}(t) + k_1 \cdot \dot{x}(t) = k_2
+\ddot{x}(t) + \frac{1}{k_1} \cdot \dot{x}(t) + k_2 = 0
 \end{equation}$$
 
 Agora, vamos resolver a segunda (eixo y):
@@ -124,12 +124,19 @@ $$\begin{equation}
 \end{equation}$$
 
 $$\begin{equation}
-\text{Assumindo: } k'_1 = \frac{b.\cos{\theta}}{m} \text{, } k'_2 = \frac{\text{IMPULSO} \cdot \cos{\theta}}{m} - g,
+\text{Assumindo: } k'_1 = \frac{m}{b.\cos{\theta}} \text{, } k'_2 = -\frac{\text{IMPULSO} \cdot \cos{\theta}}{m} - g,
 \end{equation}$$
 
 $$\begin{equation}
-\ddot{y}(t) + k'_1 \cdot \dot{y}(t) = k'_2
+\ddot{y}(t) + \frac{1}{k'_1} \cdot \dot{y}(t) +  k'_2 = 0
 \end{equation}$$
+
+Vamos determinar a equação que resolve as EDO's:
+Primeiramente podemos reescrever a equação da seguinte forma:
+$$\begin{equation}
+\dot{v_x}(t) + \frac{1}{k_1} \cdot {v_x}(t) + k_2 = 0
+\end{equation}$$
+Agora, utilizando uma mudança de variável dependente $$v_z$$ para $$u = k_1^{-1}v_x + k_2$$. Vamos calcular $$\dot{v_x}$$ em relação a $$u$$. 
 
 
 ## Como Usar
