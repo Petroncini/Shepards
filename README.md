@@ -191,6 +191,6 @@ z(t) = -k_2k_1(C + t + k_1e^{-t/k_1})
 
 Também é possível perceber que a equação do movimento no eixo y pode ser resolvido com a mesma equação.
 
-##Implementação
+## Implementação:
 
 ## Referências:
