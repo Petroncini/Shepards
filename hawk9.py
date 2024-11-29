@@ -25,14 +25,14 @@ VERMELHO = (255, 0, 0)
 AZUL = (0, 0, 255)
 
 GRAVIDADE = 9.8  #m/s^2
-IMPULSO = 500000    #kg*m/s^2
+IMPULSO = 25000    #kg*m/s^2
 RAPIDEZ_ROTACAO = 0.025 #RAD/s
 MAX_COMBUSTIVEL = 100
-FATOR_ESCALA = 0.01
-VISCOSIDADE_AR = 0
+FATOR_ESCALA = 1.5
+VISCOSIDADE_AR = 0.05
 RESISTENCIA_AR = VISCOSIDADE_AR / 12 #na verdade é b
 
-VELOCIDADE_INICIAL = 10000
+VELOCIDADE_INICIAL = 250
 
 """
 A function that can be used to write text on our screen and buttons
@@ -118,8 +118,8 @@ class Rocket:
         self.rapidez = VELOCIDADE_INICIAL
         self.vx = math.cos(self.angulo + (math.pi/2)) * self.rapidez     # Horizontal velocity
         self.vy = math.sin(self.angulo + (math.pi/2)) * self.rapidez     # Vertical velocity
-        self.x -= self.vx * 1 * FATOR_ESCALA
-        self.y -= self.vy * 1 * FATOR_ESCALA
+        self.x -= self.vx * 0.01
+        self.y -= self.vy * 0.01
         self.combustivel = MAX_COMBUSTIVEL
         self.massa = 50 + self.combustivel*0.8
         self.cor = BRANCO
@@ -240,6 +240,7 @@ class Rocket:
         vy_futuro = self.vy
 
         pontos_trajetoria = []
+        pontos_trajetoria.append((int(x_futuro), int(y_futuro)))
 
         while True:
             vy_futuro += GRAVIDADE * dt
@@ -253,13 +254,13 @@ class Rocket:
 
             if y_futuro > ALTURA or y_futuro < 0 or x_futuro > LARGURA or x_futuro < 0:
                 break
-            dt += 1
+            dt += 0.01
 
         
         if len(pontos_trajetoria) > 1:
             superfice = pygame.Surface((ALTURA, LARGURA), pygame.SRCALPHA)
             cor = pygame.Color(255, 0, 0, 100)
-            pygame.draw.lines(superfice, cor, False, pontos_trajetoria, 1)
+            pygame.draw.lines(superfice, cor, False, pontos_trajetoria, 2)
             screen.blit(superfice, (0, 0))
 
 def draw_landing_pad(screen):
@@ -336,7 +337,7 @@ def game():
                     rocket.colidiu = True
                     font = pygame.font.Font(None, 74)
 
-                    if abs(math.sqrt(rocket.vx**2 + rocket.vy**2)) < 1000:
+                    if abs(math.sqrt(rocket.vx**2 + rocket.vy**2)) < 5000:
                         if abs(rocket.angulo) < math.pi/6:
                             end_game(rocket, "Landed!", False)
                             landed = True
@@ -459,7 +460,7 @@ def main_menu():
         pygame.draw.rect(screen, (255, 0, 0), button_1)
 
         # Center the text on the buttons
-        play_text_surface = font_text.render('JOAGR', True, (255, 255, 255))
+        play_text_surface = font_text.render('JOGAR', True, (255, 255, 255))
         play_text_rect = play_text_surface.get_rect(center=button_1.center)
         screen.blit(play_text_surface, play_text_rect)
 
