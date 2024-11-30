@@ -71,7 +71,7 @@ class Cloud:
 
     def update(self):
         self.r += self.expansion_rate
-        self.expansion_rate -= 0.1
+        self.expansion_rate -= 0.2
         self.a -= 1
         if self.color.a > 0:
             self.color.a -= 1
@@ -102,7 +102,7 @@ class Explosion:
             cloud.draw(screen)
 
     def is_done(self):
-        if(self.clouds[0].a == -30):
+        if(self.clouds[0].a == -15):
             return True
         else:
             return False
@@ -278,10 +278,11 @@ def end_game(rocket, message, exploded):
     rocket.colidiu = True
 
 
-def game():
+def game(stars):
+
     rocket = Rocket()
-    print(f"created rocket at {rocket.x}, {rocket.y} with velocity {rocket.vx},{rocket.vy}")
-    print(rocket.explosion)
+    #print(f"created rocket at {rocket.x}, {rocket.y} with velocity {rocket.vx},{rocket.vy}")
+    #print(rocket.explosion)
     running = True
     landing_pad = pygame.Rect(LARGURA / 2 - 50, ALTURA - 10, 100, 10)
     game_over = False
@@ -291,8 +292,14 @@ def game():
     qtd_impulsos = 2
 
     while running:
-        print(f"rocket at {rocket.x},{rocket.y} vel: {rocket.vx},{rocket.vy}")
+        #print(f"rocket at {rocket.x},{rocket.y} vel: {rocket.vx},{rocket.vy}")
+        clock.tick(60)
         screen.fill(PRETO)
+        
+        for star in stars:
+            star.speed = 0
+            star.update()
+            star.draw(screen)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -328,9 +335,9 @@ def game():
                 game_over = True
             
 
-        print(rocket.colidiu)
+        #print(rocket.colidiu)
         rocket.update()
-        print(f"after update rocket at {rocket.x},{rocket.y} vel: {rocket.vx},{rocket.vy}")
+        #print(f"after update rocket at {rocket.x},{rocket.y} vel: {rocket.vx},{rocket.vy}")
 
         rocket_points = [
             (rocket.x - rocket.largura / 2, rocket.y - rocket.altura / 2),
@@ -338,7 +345,7 @@ def game():
             (rocket.x + rocket.largura / 2, rocket.y + rocket.altura / 2),
             (rocket.x - rocket.largura / 2, rocket.y + rocket.altura / 2)
         ]
-        
+
         if not game_over:
             for x, y in rocket_points:
                 if landing_pad.collidepoint(x, y):
@@ -389,10 +396,10 @@ def game():
                     text_rect = text.get_rect(center=(LARGURA / 2, ALTURA / 2))
                     screen.blit(text, text_rect)
                     pygame.display.flip()
-                    pygame.time.delay(2000)
-                    print("explosion is done")
+                    pygame.time.delay(1300)
+                    #print("explosion is done")
                     running = False
-                    game()
+                    game([Star() for _ in range(80)])
             else:
                 font = pygame.font.Font(None, 74)
                 text = font.render(rocket.message, True, BRANCO)
@@ -400,7 +407,7 @@ def game():
                 screen.blit(text, text_rect)
                 pygame.display.flip()
                 pygame.time.delay(2000)
-                game()
+                game([Star() for _ in range(80)])
 
 
 
@@ -413,34 +420,45 @@ def game():
 class Star:
     def __init__(self):
         self.x = random.randint(0, LARGURA)
-        self.y = random.randint(-ALTURA, 0)  # Start above the screen
-        self.size = random.randint(1, 3)
+        self.y = random.randint(0, ALTURA)
+        self.size = random.uniform(1, 2.2)
         self.speed = random.uniform(1, 2)  # Falling speed
         self.is_slowing = False
+        self.brightness = 255  # Initial brightness
+        self.twinkle_speed = random.uniform(1, 4)  # Speed of twinkling
 
     def update(self):
-        if self.is_slowing:
-            # Exponential slowdown
-            self.speed *= 0.97
-            if abs(self.speed) < 0.005:
-                self.speed = 0
+        if self.speed:
+            if self.is_slowing:
+                # Exponential slowdown
+                self.speed *= 0.98
+                if abs(self.speed) < 0.005:
+                    self.speed = 0
 
-        self.y += self.speed
-        if self.y > ALTURA:  # Reset the star to the top when it reaches the bottom
-            self.y = random.randint(-ALTURA, 0)
-            self.x = random.randint(0, LARGURA)
-            self.size = random.randint(1, 3)
-            self.speed = random.uniform(1, 3)
+            self.y += self.speed
+            if self.y > ALTURA:  # Reset the star to the top when it reaches the bottom
+                self.y = random.randint(-ALTURA, 0)
+                self.x = random.randint(0, LARGURA)
+                self.size = random.randint(1, 2)
+                self.speed = random.uniform(1, 2)
+
+        self.brightness = max(0, min(255, self.brightness + self.twinkle_speed))
+        if self.brightness > 255 or self.brightness < 100:  # Adjust these values for twinkling range
+            self.twinkle_speed *= -1  # Reverse direction of brightness change
 
     def draw(self, surface):
-        pygame.draw.circle(surface, (255, 255, 200), (self.x, int(self.y)), self.size)
+        # Ensure brightness is within valid range
+        bright_color = (255, 255, int(self.brightness))  # Adjust color based on brightness
+        pygame.draw.circle(surface, bright_color, (self.x, int(self.y)), int(self.size))
 
     def slowdown(self):
         self.is_slowing = True
 
+
+
 def title_screen():
     # Create a list of stars
-    stars = [Star() for _ in range(80)]  # 100 stars
+    stars = [Star() for _ in range(100)]  # 100 stars
     global click
     click = False
 
@@ -492,12 +510,12 @@ def menu(stars):
 
     # Define buttons
     buttons = [
-        {"text": "Button 1", "action": planet1},
-        {"text": "Button 2", "action": planet2},
-        {"text": "Button 3", "action": planet3},
-        {"text": "Button 4", "action": planet4},
-        {"text": "Button 5", "action": planet5},
-        {"text": "Button 6", "action": planet6}
+        {"text": "Planet 1", "action": planet1},
+        {"text": "Planet 2", "action": planet2},
+        {"text": "Planet 3", "action": planet3},
+        {"text": "Planet 4", "action": planet4},
+        {"text": "Planet 5", "action": planet5},
+        {"text": "Planet 6", "action": planet6}
     ]
 
     # Calculate button positions in two rows
@@ -580,18 +598,6 @@ def transition(planet, planet_name, stars):
             star.update()
             star.draw(screen)
 
-        # if not stars_stopped:
-        #     # Slow down stars
-        #     for star in stars:
-        #         star.slow()
-            
-        #     # Check if all stars have stopped
-        #     stars_stopped = all(star.speed == 0 for star in stars)
-
-        #     for star in stars:
-        #         star.update()
-        #         star.draw(screen)
-
         if abs(star.speed) > 0.1:
                 stars_stopped = False
         else:
@@ -599,10 +605,10 @@ def transition(planet, planet_name, stars):
 
         # If all stars have stopped, transition to game
         if stars_stopped:
-            return game()
+            return planet(stars)
 
         text = 'Get ready to land on ' + planet_name
-        text_surface = pygame.font.SysFont(None, 70).render(text, True, (100, 100, 100))
+        text_surface = pygame.font.SysFont(None, 70).render(text, True, (150, 150, 150))
         text_rect = text_surface.get_rect(center=(LARGURA // 2, ALTURA // 2))
         screen.blit(text_surface, text_rect)
 
@@ -620,8 +626,8 @@ def transition(planet, planet_name, stars):
         pygame.display.update()  # Update display each frame
         clock.tick(60)  # Limit frame rate
 
-def planet1():
-    game()
+def planet1(stars):
+    game(stars)
 
 def planet2():
     game()
