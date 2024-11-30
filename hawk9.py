@@ -620,5 +620,23 @@ def transition(planet, planet_name, stars):
         pygame.display.update()  # Update display each frame
         clock.tick(60)  # Limit frame rate
 
+def planet1():
+    game()
+
+def planet2():
+    game()
+
+def planet3():
+    game()
+
+def planet4():
+    game()
+
+def planet5():
+    game()
+
+def planet6():
+    game()
+
 if __name__ == "__main__":
     title_screen()
