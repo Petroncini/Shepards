@@ -1,6 +1,7 @@
 import math
 import random
 import sys
+import time
 
 import pygame
 from pygame.locals import *
@@ -25,14 +26,14 @@ VERMELHO = (255, 0, 0)
 AZUL = (0, 0, 255)
 
 GRAVIDADE = 9.8  #m/s^2
-IMPULSO = 25000    #kg*m/s^2
-RAPIDEZ_ROTACAO = 0.025 #RAD/s
+IMPULSO = 7600000    #kg*m/s^2
+RAPIDEZ_ROTACAO = 2 #RAD/s
 MAX_COMBUSTIVEL = 100
-FATOR_ESCALA = 1.5
+FATOR_ESCALA = 1
 VISCOSIDADE_AR = 0.05
-RESISTENCIA_AR = VISCOSIDADE_AR / 12 #na verdade é b
+RESISTENCIA_AR = 50 #na verdade é b
 
-VELOCIDADE_INICIAL = 250
+VELOCIDADE_INICIAL = random.uniform(150, 200)
 
 """
 A function that can be used to write text on our screen and buttons
@@ -71,7 +72,7 @@ class Cloud:
 
     def update(self):
         self.r += self.expansion_rate
-        self.expansion_rate -= 0.1
+        self.expansion_rate -= 0.05
         self.a -= 1
         if self.color.a > 0:
             self.color.a -= 1
@@ -121,7 +122,7 @@ class Rocket:
         self.x -= self.vx * 0.01
         self.y -= self.vy * 0.01
         self.combustivel = MAX_COMBUSTIVEL
-        self.massa = 50 + self.combustivel*0.8
+        self.massa = 175 + self.combustivel*0.8
         self.cor = BRANCO
         self.colidiu = False
         self.impulsionando = False
@@ -131,6 +132,7 @@ class Rocket:
         self.ingnited = False
         self.explosion = None
         self.message = None
+        self.last_time_update = time.perf_counter()
 
     def aplicar_impulso(self):
         if not self.ingnited:
@@ -144,19 +146,29 @@ class Rocket:
         self.cor = color
 
     def rotate_left(self):
-        self.angulo -= RAPIDEZ_ROTACAO
+        current_time = time.perf_counter()
+        dt = (current_time - self.last_time_update)
+
+        self.angulo -= RAPIDEZ_ROTACAO * dt
 
     def rotate_right(self):
-        self.angulo += RAPIDEZ_ROTACAO
+        current_time = time.perf_counter()
+        dt = (current_time - self.last_time_update)
+
+        self.angulo += RAPIDEZ_ROTACAO * dt
 
     def update(self):
-        dt = clock.tick(60) / 1000
+        current_time = time.perf_counter()
+        dt = (current_time - self.last_time_update)
+        self.last_time_update = current_time
+        print(f"dt: {dt}")
 
         if not self.colidiu:
             self.vy += GRAVIDADE * dt
 
             self.x += self.vx * FATOR_ESCALA * dt
             self.y += self.vy * FATOR_ESCALA * dt
+            print(f"ADDED {self.vx * FATOR_ESCALA * dt}, {self.vx * FATOR_ESCALA * dt} to rocket position")
 
             forca_viscosa_x = -self.vx * RESISTENCIA_AR * dt
             forca_viscosa_y = -self.vy * RESISTENCIA_AR * dt
@@ -179,9 +191,9 @@ class Rocket:
                     forca_x = IMPULSO * self.acelerador * math.sin(self.angulo) * dt
                     forca_y = -IMPULSO * self.acelerador * math.cos(self.angulo) * dt
                     
-                    self.vx += (forca_x / self.massa)
-                    self.vy += (forca_y / self.massa)
-                    self.combustivel -= 0.05 * self.acelerador * dt
+                    self.vx += (forca_x / self.massa) * dt
+                    self.vy += (forca_y / self.massa) * dt
+                    self.combustivel -= 5 * self.acelerador * dt
                     self.massa -= 0.05 * self.acelerador * dt
                     self.impulsionando = True
 
@@ -254,6 +266,7 @@ class Rocket:
 
             if y_futuro > ALTURA or y_futuro < 0 or x_futuro > LARGURA or x_futuro < 0:
                 break
+
             dt += 0.01
 
         
@@ -280,7 +293,6 @@ def end_game(rocket, message, exploded):
 
 def game():
     rocket = Rocket()
-    print(f"created rocket at {rocket.x}, {rocket.y} with velocity {rocket.vx},{rocket.vy}")
     print(rocket.explosion)
     running = True
     landing_pad = pygame.Rect(LARGURA / 2 - 50, ALTURA - 10, 100, 10)
@@ -291,7 +303,7 @@ def game():
     qtd_impulsos = 2
 
     while running:
-        print(f"rocket at {rocket.x},{rocket.y} vel: {rocket.vx},{rocket.vy}")
+        # print(f"rocket at {rocket.x},{rocket.y} vel: {rocket.vx},{rocket.vy}")
         screen.fill(PRETO)
         
         for event in pygame.event.get():
@@ -318,19 +330,18 @@ def game():
                 rocket.rotate_right()
 
             if keys[pygame.K_q]:
-                rocket.throtle(-0.1)
+                rocket.throtle(-0.01)
 
             elif keys[pygame.K_e]:
-                rocket.throtle(0.1)
+                rocket.throtle(0.01)
 
             if keys[pygame.K_a]:
                 end_game(rocket, "Flight Terminated", True)
                 game_over = True
             
 
-        print(rocket.colidiu)
+
         rocket.update()
-        print(f"after update rocket at {rocket.x},{rocket.y} vel: {rocket.vx},{rocket.vy}")
 
         rocket_points = [
             (rocket.x - rocket.largura / 2, rocket.y - rocket.altura / 2),
@@ -345,7 +356,7 @@ def game():
                     rocket.colidiu = True
                     font = pygame.font.Font(None, 74)
 
-                    if abs(math.sqrt(rocket.vx**2 + rocket.vy**2)) < 5000:
+                    if abs(math.sqrt(rocket.vx**2 + rocket.vy**2)) < 50:
                         if abs(rocket.angulo) < math.pi/6:
                             end_game(rocket, "Landed!", False)
                             landed = True
@@ -406,7 +417,6 @@ def game():
 
         
         pygame.display.flip()
-        clock.tick(60)
 
     pygame.quit()
 
