@@ -64,50 +64,43 @@ def draw_back_to_menu_button(screen):
     return button_rect
 
 class Planet:
-    def __init__(self, name, gravity, air_density, pad_color, background_image_path):
+    def __init__(self, name, gravity, air_density, pad_color):
         self.name = name
         self.gravity = gravity
         self.density = air_density
         self.pad_color = pad_color
-        self.background = background_image_path
 
 def create_planets():
     return {
         "Earth": Planet("Earth",
                         gravity = 9.8,
                         air_density = 1.225,
-                        pad_color = (61, 73, 144),
-                        background_image_path = 'planet_backgrounds/earth.jpg'),
+                        pad_color = (61, 73, 144)),
         
         "Venus": Planet("Venus", 
                         gravity=8.87,
                         air_density = 65,
-                        pad_color = (185, 115, 31),
-                        background_image_path = 'planet_backgrounds/earth.jpg'),
+                        pad_color = (185, 115, 31)),
         
         "Mars": Planet("Jupiter", 
                        gravity= 24.79,
                        air_density = 0.16,
-                       pad_color = (201, 87, 43),
-                       background_image_path = 'planet_backgrounds/earth.jpg'),
+                       pad_color = (201, 87, 43)),
         
         "Moon": Planet("Luna", 
                        gravity=1.62,
                        air_density = 0,
-                       pad_color = (194, 193, 191),
-                       background_image_path = 'planet_backgrounds/earth.jpg'),
+                       pad_color = (194, 193, 191)),
         
         "Europa": Planet("Europa", 
                          gravity=1.31,
                          air_density=0,
-                         pad_color = (179, 159, 156),
-                         background_image_path='planet_backgrounds/europa.jpg'),
+                         pad_color = (179, 159, 156)),
         
         "Titan": Planet("Titan", 
                         gravity=1.352,
                         air_density= 5.4,
-                        pad_color = (84, 130, 112),
-                        background_image_path='planet_backgrounds/titan.jpg')
+                        pad_color = (84, 130, 112))
     }    
     
 
@@ -198,21 +191,19 @@ class Rocket:
     def rotate_left(self):
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
-        print(f"ang: {self.angulo}")
         self.angulo -= RAPIDEZ_ROTACAO * dt
+        self.angulo = self.angulo % (2*math.pi)
 
     def rotate_right(self):
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
-
         self.angulo += RAPIDEZ_ROTACAO * dt
+        self.angulo = self.angulo % (2*math.pi)
 
     def update(self):
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
         self.last_time_update = current_time
-
-        #print(f"dt: {dt}")
 
         if not self.colidiu:
             self.vy += GRAVIDADE * dt
@@ -358,7 +349,7 @@ def create_gradient_surface(width, height, background_color):
     return gradient_surface
 
 
-def game(planet, stars):
+def game(planet):
     global GRAVIDADE, DENSIDADE_AR, PAD_COLOR
     GRAVIDADE = planet.gravity
     DENSIDADE_AR = planet.density
@@ -393,7 +384,7 @@ def game(planet, stars):
                 running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    menu([Star() for _ in range(80)])
+                    menu()
                 if event.key == pygame.K_SPACE and qtd_impulsos:
                     qtd_impulsos -= 1
                     rocket.aplicar_impulso()
@@ -481,9 +472,8 @@ def game(planet, stars):
                     screen.blit(text, text_rect)
                     pygame.display.flip()
                     pygame.time.delay(1300)
-                    #print("explosion is done")
                     running = False
-                    game(planet, stars)
+                    game(planet)
             else:
                 font = pygame.font.Font(None, 74)
                 text = font.render(rocket.message, True, BRANCO)
@@ -491,7 +481,7 @@ def game(planet, stars):
                 screen.blit(text, text_rect)
                 pygame.display.flip()
                 pygame.time.delay(2000)
-                game(planet, stars)
+                game(planet)
 
 
 
@@ -505,26 +495,36 @@ class Star:
         self.x = random.randint(0, LARGURA)
         self.y = random.randint(0, ALTURA)
         self.size = random.uniform(1, 2.2)
-        self.speed = random.uniform(1, 2)  # Falling speed
+        self.speed = random.uniform(0.7, 2.7)  # Falling speed
         self.is_slowing = False
-        self.brightness = 255  # Initial brightness
-        self.twinkle_speed = random.uniform(20, 80)  # Speed of twinkling
+        self.is_moving = True
+        self.speeding_up = False
+        self.brightness = random.randint(200, 255)
+        self.twinkle_speed = random.uniform(20, 80)
 
     def update(self):
-        if self.speed:
-            if self.is_slowing:
-                # Exponential slowdown
-                self.speed *= 0.98
-                if abs(self.speed) < 0.005:
-                    self.speed = 0
+        if self.speed == 0:
+            self.is_slowing = False
+            self.is_moving = False
 
+        if self.is_slowing:
+            self.speed *= 0.98
+            if abs(self.speed) < 0.005:
+                self.speed = 0
+
+        if self.is_moving:
             self.y += self.speed
             if self.y > ALTURA:  # Reset the star to the top when it reaches the bottom
                 self.y = random.randint(-ALTURA, 0)
                 self.x = random.randint(0, LARGURA)
                 self.size = random.randint(1, 2)
-                self.speed = random.uniform(1, 2)
+                self.speed = random.uniform(0.7, 2.7)
 
+        if self.speeding_up:
+            self.speed *= 1.04
+            if self.speed > 2.7:
+                self.speed = 2.7
+                self.speeding_up = False
         self.brightness += self.twinkle_speed
         if self.brightness >= 255 or self.brightness <= 200:
             self.twinkle_speed *= -1  # Reverse direction of brightness change
@@ -539,10 +539,16 @@ class Star:
     def slowdown(self):
         self.is_slowing = True
 
+    def speed_up(self):
+        self.speed = random.uniform(0.1, 0.2)
+        self.is_moving = True
+        self.speeding_up = True
+
 
 
 def title_screen():
     # Create a list of stars
+    global stars
     stars = [Star() for _ in range(100)]  # 100 stars
     global click
     click = False
@@ -573,17 +579,17 @@ def title_screen():
                     sys.exit()
 
                 if event.key == K_SPACE or event.key == K_RETURN:
-                    menu(stars)
+                    menu()
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    menu(stars)
+                    menu()
 
             
 
         pygame.display.update()
         clock.tick(60)
 
-def menu(stars):
+def menu():
     global click
     click = False
 
@@ -599,7 +605,7 @@ def menu(stars):
     buttons = [
     {
         "text": planet.name,
-        "action": lambda p=planet: transition(p, stars)
+        "action": lambda p=planet: transition(p)
     }
     for planet in planet_list
     ]
@@ -630,6 +636,8 @@ def menu(stars):
     while True:
         screen.fill(PRETO)
         for star in stars:
+            if not star.is_moving:
+                star.speed_up()
             star.update()
             star.draw(screen)
         
@@ -673,7 +681,7 @@ def menu(stars):
         pygame.display.update()
         clock.tick(60)
 
-def transition(planet, stars):
+def transition(planet):
     sky_static = False
     while True:
         screen.fill(PRETO)
@@ -691,7 +699,7 @@ def transition(planet, stars):
 
         # If all stars have stopped, transition to game
         if stars_stopped:
-            return game(planet, stars)
+            return game(planet)
 
         text = 'Get ready to land on ' + planet.name
         text_surface = pygame.font.SysFont(None, 70).render(text, True, (150, 150, 150))
