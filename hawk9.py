@@ -29,8 +29,6 @@ IMPULSO = 7600000    #kg*m/s^2
 RAPIDEZ_ROTACAO = 2 #RAD/s
 MAX_COMBUSTIVEL = 100
 FATOR_ESCALA = 1
-VISCOSIDADE_AR = 1.225
-RESISTENCIA_AR = 50 #na verdade é b
 COEFICIENTE_ARRASTO = 1000
 FUEL_WEIGHT = 1300
 DRY_MASS = 22000
@@ -193,13 +191,11 @@ class Rocket:
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
         self.angulo -= RAPIDEZ_ROTACAO * dt
-        self.angulo = self.angulo % (2*math.pi)
 
     def rotate_right(self):
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
         self.angulo += RAPIDEZ_ROTACAO * dt
-        self.angulo = self.angulo % (2*math.pi)
 
     def update(self):
         current_time = time.perf_counter()
@@ -361,7 +357,6 @@ def game(planet):
     gradient_background = create_gradient_surface(LARGURA, ALTURA, PAD_COLOR)
 
     rocket = Rocket()
-    #print(rocket.explosion)
     running = True
     landing_pad = pygame.Rect(LARGURA / 2 - 50, ALTURA - 10, 100, 10)
     game_over = False
@@ -371,7 +366,6 @@ def game(planet):
     qtd_impulsos = 2
 
     while running:
-        # print(f"rocket at {rocket.x},{rocket.y} vel: {rocket.vx},{rocket.vy}")
         screen.fill(PRETO)
         screen.blit(gradient_background, (0, 0))
         
@@ -379,8 +373,6 @@ def game(planet):
             star.speed = 0
             star.update()
             star.draw(screen)
-
-        #screen.blit(pygame.image.load(planet.background), (0, 0))
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -453,14 +445,6 @@ def game(planet):
             rocket.desenhar_trajetoria(screen)
             rocket.draw_flame(screen)
             rocket.draw(screen)
-            # Draw the "Back to Menu" button
-            # back_button_rect = draw_back_to_menu_button(screen)
-
-            # Check if the back button was clicked
-            # mx, my = pygame.mouse.get_pos()
-            # if back_button_rect.collidepoint(mx, my):
-            #     if click:
-            #         menu([Star() for _ in range(80)])
         draw_landing_pad(screen)
 
         if game_over:
@@ -499,6 +483,7 @@ class Star:
         self.y = random.randint(0, ALTURA)
         self.size = random.uniform(1, 2.2)
         self.speed = random.uniform(0.7, 2.7)  # Falling speed
+        self.max_speed = self.speed
         self.is_slowing = False
         self.is_moving = True
         self.speeding_up = False
@@ -525,8 +510,8 @@ class Star:
 
         if self.speeding_up:
             self.speed *= 1.04
-            if self.speed > 2.7:
-                self.speed = 2.7
+            if self.speed > self.max_speed:
+                self.speed = self.max_speed
                 self.speeding_up = False
         self.brightness += self.twinkle_speed
         if self.brightness >= 255 or self.brightness <= 200:
