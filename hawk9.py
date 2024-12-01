@@ -30,8 +30,11 @@ IMPULSO = 7600000    #kg*m/s^2
 RAPIDEZ_ROTACAO = 2 #RAD/s
 MAX_COMBUSTIVEL = 100
 FATOR_ESCALA = 1
-VISCOSIDADE_AR = 0.05
+VISCOSIDADE_AR = 1.225
 RESISTENCIA_AR = 50 #na verdade é b
+COEFICIENTE_ARRASTO = 5
+FUEL_WEIGHT = 1500
+DRY_MASS = 22000
 
 VELOCIDADE_INICIAL = random.uniform(150, 200)
 
@@ -122,7 +125,7 @@ class Rocket:
         self.x -= self.vx * 0.01
         self.y -= self.vy * 0.01
         self.combustivel = MAX_COMBUSTIVEL
-        self.massa = 175 + self.combustivel*0.8
+        self.massa = DRY_MASS + self.combustivel * FUEL_WEIGHT
         self.cor = BRANCO
         self.colidiu = False
         self.impulsionando = False
@@ -191,10 +194,10 @@ class Rocket:
                     forca_x = IMPULSO * self.acelerador * math.sin(self.angulo) * dt
                     forca_y = -IMPULSO * self.acelerador * math.cos(self.angulo) * dt
                     
-                    self.vx += (forca_x / self.massa) * dt
-                    self.vy += (forca_y / self.massa) * dt
-                    self.combustivel -= 5 * self.acelerador * dt
-                    self.massa -= 0.05 * self.acelerador * dt
+                    self.vx += (forca_x / self.massa)
+                    self.vy += (forca_y / self.massa)
+                    self.combustivel -= 10 * self.acelerador * dt
+                    self.massa = max(0, DRY_MASS + self.combustivel * FUEL_WEIGHT)
                     self.impulsionando = True
 
 
@@ -264,7 +267,8 @@ class Rocket:
 
             pontos_trajetoria.append((int(x_futuro), int(y_futuro)))
 
-            if y_futuro > ALTURA or y_futuro < 0 or x_futuro > LARGURA or x_futuro < 0:
+            if y_futuro > ALTURA or y_futuro < 0 or x_futuro > (2*LARGURA) or x_futuro < 0:
+                print(f"breaking at {x_futuro}")
                 break
 
             dt += 0.01
