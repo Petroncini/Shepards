@@ -199,7 +199,6 @@ class Rocket:
     def rotate_left(self):
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
-        print(f"ang: {self.angulo}")
         self.angulo -= RAPIDEZ_ROTACAO * dt
 
     def rotate_right(self):
@@ -286,7 +285,7 @@ class Rocket:
         font = pygame.font.Font(None, 36)
         fuel_text = font.render(f"Fuel: {int(self.combustivel)}", True, BRANCO)
         speed_text = font.render(f"Speed: {int(math.sqrt(self.vx**2 + self.vy**2))}", True, BRANCO)
-        angle_text = font.render(f"Angle: {int((-1*self.angulo) * (180/math.pi) + 90)}", True, BRANCO)
+        angle_text = font.render(f"Angle: {int((self.angulo) * (180/math.pi))}", True, BRANCO)
     
         screen.blit(fuel_text, (10, 10))
         screen.blit(speed_text, (10, 40))
