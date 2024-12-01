@@ -376,7 +376,7 @@ def game(planet):
         screen.blit(gradient_background, (0, 0))
         
         for star in stars:
-            star.speed = 0
+            #star.speed = 0
             star.update()
             star.draw(screen)
         
@@ -488,23 +488,26 @@ class Star:
         self.x = random.randint(0, LARGURA)
         self.y = random.randint(0, ALTURA)
         self.size = random.uniform(1, 2.2)
-        self.speed = random.uniform(0.7, 2.7)  # Falling speed
+        self.speed = random.uniform(0.2, 0.8)  # Falling speed
         self.max_speed = self.speed
         self.is_slowing = False
         self.is_moving = True
         self.speeding_up = False
-        self.brightness = random.randint(200, 255)
-        self.twinkle_speed = random.uniform(20, 80)
+        self.brightness = random.randint(150, 255)
+        self.twinkle_speed = random.uniform(2, 4)
 
     def update(self):
         if self.speed == 0:
             self.is_slowing = False
             self.is_moving = False
+            self.speeding_up = False
 
         if self.is_slowing:
-            self.speed *= 0.98
-            if abs(self.speed) < 0.005:
+            self.speed *= 0.996
+            if abs(self.speed) < 0.002:
                 self.speed = 0
+                self.is_moving = False
+                self.is_slowing = False
 
         if self.is_moving:
             self.y += self.speed
@@ -512,15 +515,17 @@ class Star:
                 self.y = random.randint(-ALTURA, 0)
                 self.x = random.randint(0, LARGURA)
                 self.size = random.randint(1, 2)
-                self.speed = random.uniform(0.7, 2.7)
+                if not self.is_slowing:
+                    self.speed = random.uniform(0.2, 0.8)
 
         if self.speeding_up:
-            self.speed *= 1.04
+            self.speed *= 1.02
             if self.speed > self.max_speed:
                 self.speed = self.max_speed
                 self.speeding_up = False
-        self.brightness += self.twinkle_speed
-        if self.brightness >= 255 or self.brightness <= 200:
+
+        self.brightness += (self.twinkle_speed)
+        if self.brightness >= 255 or self.brightness <= 150:
             self.twinkle_speed *= -1  # Reverse direction of brightness change
         self.brightness = max(100, min(255, self.brightness))  # Clamp after updating
 
@@ -543,7 +548,7 @@ class Star:
 def title_screen():
     # Create a list of stars
     global stars
-    stars = [Star() for _ in range(100)]  # 100 stars
+    stars = [Star() for _ in range(120)]  # 100 stars
     global click
     click = False
 
@@ -578,10 +583,8 @@ def title_screen():
                 if event.button == 1:
                     menu()
 
-            
-
         pygame.display.update()
-        clock.tick(60)
+
 
 def menu():
     global click
@@ -673,7 +676,6 @@ def menu():
                             button['action']()
         
         pygame.display.update()
-        clock.tick(60)
 
 def transition(planet):
     sky_static = False
@@ -686,7 +688,7 @@ def transition(planet):
             star.update()
             star.draw(screen)
 
-        if abs(star.speed) > 0.1:
+        if abs(star.speed) > 0:
                 stars_stopped = False
         else:
             stars_stopped = True
@@ -712,7 +714,6 @@ def transition(planet):
                     return
                 
         pygame.display.update()  # Update display each frame
-        clock.tick(60)  # Limit frame rate
 
 if __name__ == "__main__":
     pygame.mixer.music.play(loops=-1)
