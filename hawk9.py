@@ -458,7 +458,6 @@ def game(planet):
                 rocket.explosion.update()
                 rocket.explosion.draw(screen)
                 if rocket.explosion.is_done():
-                    # Display the end message after the explosion is done
                     font = pygame.font.Font(None, 74)
                     text = font.render(rocket.message, True, BRANCO)
                     text_rect = text.get_rect(center=(LARGURA / 2, ALTURA / 2))
@@ -519,7 +518,7 @@ class Star:
             if self.speed > self.max_speed:
                 self.speed = self.max_speed
                 self.speeding_up = False
-        self.brightness += self.twinkle_speed
+        self.brightness += self.twinkle_speed / 10
         if self.brightness >= 255 or self.brightness <= 200:
             self.twinkle_speed *= -1  # Reverse direction of brightness change
         self.brightness = max(100, min(255, self.brightness))  # Clamp after updating
