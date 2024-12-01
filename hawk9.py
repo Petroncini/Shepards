@@ -334,6 +334,22 @@ def end_game(rocket, message, exploded):
         rocket.explosion = Explosion(rocket.x, rocket.y)
     rocket.colidiu = True
 
+def create_gradient_surface(width, height, background_color):
+    # Create a new surface with the same dimensions as the screen
+    gradient_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+    
+    for y in range(height):
+        # Calculate alpha from 0 at the top to 128 at the bottom
+        alpha = int(255 * (y / height) / 2)  # 128 is 50% transparency (255 = opaque, 0 = transparent)
+        
+        # Create a color with the desired alpha value (RGBA)
+        color = (background_color, alpha)
+        
+        # Draw a line across the surface with the calculated transparency
+        pygame.draw.line(gradient_surface, color, (0, y), (width, y))
+    
+    return gradient_surface
+
 
 def game(planet, stars):
     global GRAVIDADE, DENSIDADE_AR
