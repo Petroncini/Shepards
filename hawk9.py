@@ -34,6 +34,7 @@ RESISTENCIA_AR = 50 #na verdade é b
 COEFICIENTE_ARRASTO = 1000
 FUEL_WEIGHT = 1300
 DRY_MASS = 22000
+DROPOFF_RATE = 1200
 
 VELOCIDADE_INICIAL = random.uniform(150, 200)
 
@@ -210,10 +211,10 @@ class Rocket:
 
             self.x += self.vx * FATOR_ESCALA * dt
             self.y += self.vy * FATOR_ESCALA * dt
+            DROP_OFF = 1/((self.x/DROPOFF_RATE) + 1)
 
-
-            forca_viscosa_x = -self.vx * (DENSIDADE_AR * COEFICIENTE_ARRASTO) * dt
-            forca_viscosa_y = -self.vy * (DENSIDADE_AR * COEFICIENTE_ARRASTO) * dt
+            forca_viscosa_x = -self.vx * (DENSIDADE_AR * COEFICIENTE_ARRASTO * DROP_OFF)  * dt
+            forca_viscosa_y = -self.vy * (DENSIDADE_AR * COEFICIENTE_ARRASTO * DROP_OFF) * dt
             self.vx += (forca_viscosa_x / self.massa)
             self.vy += (forca_viscosa_y / self.massa)
 
@@ -300,8 +301,10 @@ class Rocket:
             vy_futuro += GRAVIDADE * dt
             x_futuro += vx_futuro * FATOR_ESCALA * dt
             y_futuro += vy_futuro * FATOR_ESCALA * dt
-            vx_futuro += (-vx_futuro * (DENSIDADE_AR * COEFICIENTE_ARRASTO))/self.massa * dt
-            vy_futuro += (-vy_futuro * (DENSIDADE_AR * COEFICIENTE_ARRASTO) )/self.massa* dt
+            DROP_OFF = 1/((x_futuro/DROPOFF_RATE) + 1)
+
+            vx_futuro += (-vx_futuro * (DENSIDADE_AR * COEFICIENTE_ARRASTO * DROP_OFF) )/self.massa * dt
+            vy_futuro += (-vy_futuro * (DENSIDADE_AR * COEFICIENTE_ARRASTO * DROP_OFF) )/self.massa* dt
 
 
             pontos_trajetoria.append((int(x_futuro), int(y_futuro)))
