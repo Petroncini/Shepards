@@ -18,8 +18,6 @@ pygame.display.set_caption("Rocket Landing Game")
 font_text = pygame.font.SysFont(None, 30)
 font_h1 = pygame.font.SysFont(None, 80)
 clock = pygame.time.Clock()
-pygame.mixer.init()
-pygame.mixer.music.load("Space.mp3")
 
 # A variable to check for the status later
 click = False
@@ -36,18 +34,12 @@ GRAVIDADE = 9.8  # Gravity [m/s^2]
 IMPULSO = 7600000 # Impulse [kg*m/s^2]
 RAPIDEZ_ROTACAO = 2 # Rotation speed [RAD/s]
 MAX_COMBUSTIVEL = 100 # Fuel 
-FATOR_ESCALA = 1 # Scale factor
+FATOR_ESCALA = 1 # Scale factor 
+VISCOSIDADE_AR = 0.05 # Coefficient of air viscosity 
+RESISTENCIA_AR = 50 # Coefficient of air resistance 
 VELOCIDADE_INICIAL = random.uniform(150, 200) # Initial speed random value between 150-200
-COEFICIENTE_ARRASTO = 1000
-FUEL_WEIGHT = 1300
-DRY_MASS = 22000
-DROPOFF_RATE = 1200
 
-VELOCIDADE_INICIAL = random.uniform(150, 200)
 
-"""
-A function that can be used to write text on our screen and buttons
-"""
 def draw_text(text, font, color, surface, x, y):
     """
     A function that can be used to write text on our screen and buttons
@@ -91,47 +83,6 @@ def draw_back_to_menu_button(screen):
     screen.blit(text_surface, text_rect)
 
     return button_rect
-
-class Planet:
-    def __init__(self, name, gravity, air_density, pad_color):
-        self.name = name
-        self.gravity = gravity
-        self.density = air_density
-        self.pad_color = pad_color
-
-def create_planets():
-    return {
-        "Earth": Planet("Earth",
-                        gravity = 9.8,
-                        air_density = 1.225,
-                        pad_color = (61, 73, 144)),
-        
-        "Venus": Planet("Venus", 
-                        gravity=8.87,
-                        air_density = 65,
-                        pad_color = (185, 115, 31)),
-        
-        "Mars": Planet("Jupiter", 
-                       gravity= 24.79,
-                       air_density = 0.16,
-                       pad_color = (201, 87, 43)),
-        
-        "Moon": Planet("Luna", 
-                       gravity=1.62,
-                       air_density = 0,
-                       pad_color = (194, 193, 191)),
-        
-        "Europa": Planet("Europa", 
-                         gravity=1.31,
-                         air_density=0,
-                         pad_color = (188,126,92)),
-        
-        "Titan": Planet("Titan", 
-                        gravity=1.352,
-                        air_density= 5.4,
-                        pad_color = (84, 130, 112))
-    }    
-    
 
 class Cloud:
     """
@@ -187,7 +138,7 @@ class Explosion:
         # Define the clouds
         self.clouds = []
         for _ in range(10):
-            self.clouds.append(Cloud(self.x + random.randrange(1, 100), self.y + random.randrange(1, 100)))
+            self.clouds.append(Cloud(self.x + random.randrange(1, 50), self.y + random.randrange(1, 50)))
     
     def update(self):
         """
@@ -224,10 +175,10 @@ class Rocket:
         self.rapidez = VELOCIDADE_INICIAL
         self.vx = math.cos(self.angulo + (math.pi/2)) * self.rapidez     # Horizontal velocity
         self.vy = math.sin(self.angulo + (math.pi/2)) * self.rapidez     # Vertical velocity
-        self.x -= self.vx * 1
-        self.y -= self.vy * 1
+        self.x -= self.vx * 0.01
+        self.y -= self.vy * 0.01
         self.combustivel = MAX_COMBUSTIVEL # fuel 
-        self.massa = DRY_MASS + self.combustivel * FUEL_WEIGHT # mass of the rocket 
+        self.massa = 175 + self.combustivel*0.8 # mass of the rocket 
         self.cor = BRANCO # color 
         self.colidiu = False # collision status 
         self.impulsionando = False 
@@ -264,9 +215,8 @@ class Rocket:
         """
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
+
         self.angulo -= RAPIDEZ_ROTACAO * dt
-        if self.angulo < -math.pi:
-            self.angulo = 2*math.pi + self.angulo
 
     def rotate_right(self):
         """
@@ -274,9 +224,8 @@ class Rocket:
         """
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
+
         self.angulo += RAPIDEZ_ROTACAO * dt
-        if self.angulo > math.pi:
-            self.angulo = -2*math.pi + self.angulo
 
     def update(self):
         """
@@ -286,6 +235,7 @@ class Rocket:
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
         self.last_time_update = current_time
+        print(f"dt: {dt}")
 
         # Verifies if the rocket hasn't collided 
         if not self.colidiu:
@@ -295,11 +245,11 @@ class Rocket:
             # Updates position according to velocity and scale factor 
             self.x += self.vx * FATOR_ESCALA * dt
             self.y += self.vy * FATOR_ESCALA * dt
-            DROP_OFF = 1/((self.x/DROPOFF_RATE) + 1)
+            print(f"ADDED {self.vx * FATOR_ESCALA * dt}, {self.vx * FATOR_ESCALA * dt} to rocket position")
 
             # Change velocity depending of air resistence 
-            forca_viscosa_x = -self.vx * (DENSIDADE_AR * COEFICIENTE_ARRASTO * DROP_OFF)  * dt
-            forca_viscosa_y = -self.vy * (DENSIDADE_AR * COEFICIENTE_ARRASTO * DROP_OFF) * dt
+            forca_viscosa_x = -self.vx * RESISTENCIA_AR * dt
+            forca_viscosa_y = -self.vy * RESISTENCIA_AR * dt
             self.vx += (forca_viscosa_x / self.massa)
             self.vy += (forca_viscosa_y / self.massa)
 
@@ -321,10 +271,10 @@ class Rocket:
                     forca_x = IMPULSO * self.acelerador * math.sin(self.angulo) * dt
                     forca_y = -IMPULSO * self.acelerador * math.cos(self.angulo) * dt
                     # Update the velocity and decreases mass and fuel 
-                    self.vx += (forca_x / self.massa)
-                    self.vy += (forca_y / self.massa)
-                    self.combustivel -= 10 * self.acelerador * dt
-                    self.massa = max(0, DRY_MASS + self.combustivel * FUEL_WEIGHT)
+                    self.vx += (forca_x / self.massa) * dt
+                    self.vy += (forca_y / self.massa) * dt
+                    self.combustivel -= 5 * self.acelerador * dt
+                    self.massa -= 0.05 * self.acelerador * dt
                     self.impulsionando = True
 
 
@@ -404,23 +354,20 @@ class Rocket:
             vy_futuro += GRAVIDADE * dt
             x_futuro += vx_futuro * FATOR_ESCALA * dt
             y_futuro += vy_futuro * FATOR_ESCALA * dt
-            DROP_OFF = 1/((x_futuro/DROPOFF_RATE) + 1)
-
-            vx_futuro += (-vx_futuro * (DENSIDADE_AR * COEFICIENTE_ARRASTO * DROP_OFF) )/self.massa * dt
-            vy_futuro += (-vy_futuro * (DENSIDADE_AR * COEFICIENTE_ARRASTO * DROP_OFF) )/self.massa* dt
-
+            vx_futuro += (-vx_futuro * RESISTENCIA_AR)/self.massa * dt
+            vy_futuro += (-vy_futuro * RESISTENCIA_AR )/self.massa* dt
 
             pontos_trajetoria.append((int(x_futuro), int(y_futuro)))
 
             # Stops if the rocket is not in screen boundries 
-            if y_futuro > ALTURA or y_futuro < 0 or x_futuro > (2*LARGURA) or x_futuro < 0:
+            if y_futuro > ALTURA or y_futuro < 0 or x_futuro > LARGURA or x_futuro < 0:
                 break
 
             dt += 0.01
         
         # Draws the trajectory 
         if len(pontos_trajetoria) > 1:
-            superfice = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+            superfice = pygame.Surface((ALTURA, LARGURA), pygame.SRCALPHA)
             cor = pygame.Color(255, 0, 0, 100)
             pygame.draw.lines(superfice, cor, False, pontos_trajetoria, 2)
             screen.blit(superfice, (0, 0))
@@ -433,14 +380,14 @@ def draw_landing_pad(screen):
     pad_height = 10
     pad_x = LARGURA / 2 - pad_width / 2
     pad_y = ALTURA - pad_height
-    pygame.draw.rect(screen, PAD_COLOR, (pad_x, pad_y, pad_width, pad_height))
+    pygame.draw.rect(screen, VERDE, (pad_x, pad_y, pad_width, pad_height))
 
 
 def end_game(rocket, message, exploded):
     """ 
     Function that handles end game given the result 
     Parameters:
-    rocket: a ca
+    rocket: a class rocket 
     message: the message to be displayed 
     exploded: if the rocket has exploded 
     """
@@ -450,33 +397,11 @@ def end_game(rocket, message, exploded):
         rocket.explosion = Explosion(rocket.x, rocket.y)
     rocket.colidiu = True
 
-def create_gradient_surface(width, height, background_color):
-    # Create a new surface with the same dimensions as the screen
-    gradient_surface = pygame.Surface((width, height), pygame.SRCALPHA)
-    
-    for y in range(height):
-        # Calculate alpha from 0 at the top to 128 at the bottom
-        alpha = int(255 * (y / height) / 2)  # 128 is 50% transparency (255 = opaque, 0 = transparent)
-        
-        # Create a color with the desired alpha value (RGBA)
-        color = background_color + (alpha,)
-        
-        # Draw a line across the surface with the calculated transparency
-        pygame.draw.line(gradient_surface, color, (0, y), (width, y))
-    
-    return gradient_surface
 
-
-def game(planet):
+def game():
     # Initializes the game 
-    global GRAVIDADE, DENSIDADE_AR, PAD_COLOR
-    GRAVIDADE = planet.gravity
-    DENSIDADE_AR = planet.density
-    PAD_COLOR = planet.pad_color
-
-    gradient_background = create_gradient_surface(LARGURA, ALTURA, PAD_COLOR)
-
     rocket = Rocket()
+    print(rocket.explosion)
     running = True # Controls game loop 
     landing_pad = pygame.Rect(LARGURA / 2 - 50, ALTURA - 10, 100, 10)
     game_over = False
@@ -487,12 +412,6 @@ def game(planet):
 
     while running:
         screen.fill(PRETO)
-        screen.blit(gradient_background, (0, 0))
-        
-        for star in stars:
-            #star.speed = 0
-            star.update()
-            star.draw(screen)
         
         for event in pygame.event.get():
             # If the player closes the window, the game ends 
@@ -501,7 +420,8 @@ def game(planet):
             elif event.type == pygame.KEYDOWN:
                 # If the player presses escape, the game ends 
                 if event.key == pygame.K_ESCAPE:
-                    menu()
+                    running = False
+                # Thrust control 
                 if event.key == pygame.K_SPACE and qtd_impulsos:
                     qtd_impulsos -= 1
                     rocket.aplicar_impulso()
@@ -530,7 +450,6 @@ def game(planet):
                 game_over = True
             
 
-            
         rocket.update()
 
         rocket_points = [
@@ -539,7 +458,7 @@ def game(planet):
             (rocket.x + rocket.largura / 2, rocket.y + rocket.altura / 2),
             (rocket.x - rocket.largura / 2, rocket.y + rocket.altura / 2)
         ]
-
+        
         if not game_over:
             for x, y in rocket_points:
                 # Checks if the rocket has collided with the landing pad 
@@ -571,7 +490,6 @@ def game(planet):
             rocket.desenhar_trajetoria(screen)
             rocket.draw_flame(screen)
             rocket.draw(screen)
-            """
             # Draw the "Back to Menu" button
             back_button_rect = draw_back_to_menu_button(screen)
 
@@ -580,7 +498,6 @@ def game(planet):
             if back_button_rect.collidepoint(mx, my):
                 if click:
                     menu()
-            """
         draw_landing_pad(screen)
 
         if game_over:
@@ -594,10 +511,10 @@ def game(planet):
                     text_rect = text.get_rect(center=(LARGURA / 2, ALTURA / 2))
                     screen.blit(text, text_rect)
                     pygame.display.flip()
-                    pygame.time.delay(1300)
-                    #print("explosion is done")
+                    pygame.time.delay(2000)
+                    print("explosion is done")
                     running = False
-                    game(planet)
+                    game()
             # If there's no explosion, displays the message and restats the game 
             else:
                 font = pygame.font.Font(None, 74)
@@ -606,7 +523,7 @@ def game(planet):
                 screen.blit(text, text_rect)
                 pygame.display.flip()
                 pygame.time.delay(2000)
-                game(planet)
+                game()
 
         
         pygame.display.flip()
@@ -619,60 +536,33 @@ class Star:
     """
     def __init__(self):
         self.x = random.randint(0, LARGURA)
-        self.y = random.randint(0, ALTURA)
-        self.size = random.uniform(1, 2.2)
-        self.speed = random.uniform(0.2, 0.8)  # Falling speed
-        self.max_speed = self.speed
-        self.is_slowing = False
-        self.is_moving = True
-        self.speeding_up = False
-        self.brightness = random.randint(150, 255)
-        self.twinkle_speed = random.uniform(2, 4)
+        self.y = random.randint(-ALTURA, 0)  # Start above the screen
+        self.size = random.randint(1, 3) # Star size 
+        self.speed = random.uniform(1, 2)  # Falling speed
+        self.is_slowing = False 
 
     def update(self):
         """
         Updates the speed of the stars and its position 
         """
-        if self.speed == 0:
-            self.is_slowing = False
-            self.is_moving = False
-            self.speeding_up = False
-
         if self.is_slowing:
-            self.speed *= 0.996
-            if abs(self.speed) < 0.002:
+            # Exponential slowdown
+            self.speed *= 0.97
+            if abs(self.speed) < 0.005:
                 self.speed = 0
-                self.is_moving = False
-                self.is_slowing = False
 
-        if self.is_moving:
-            self.y += self.speed
-            if self.y > ALTURA:  # Reset the star to the top when it reaches the bottom
-                self.y = random.randint(-ALTURA, 0)
-                self.x = random.randint(0, LARGURA)
-                self.size = random.randint(1, 2)
-                if not self.is_slowing:
-                    self.speed = random.uniform(0.2, 0.8)
-
-        if self.speeding_up:
-            self.speed *= 1.009
-            if self.speed > self.max_speed:
-                self.speed = self.max_speed
-                self.speeding_up = False
-
-        self.brightness += (self.twinkle_speed)
-        if self.brightness >= 255 or self.brightness <= 150:
-            self.twinkle_speed *= -1  # Reverse direction of brightness change
-        self.brightness = max(100, min(255, self.brightness))  # Clamp after updating
-
+        self.y += self.speed
+        if self.y > ALTURA:  # Reset the star to the top when it reaches the bottom
+            self.y = random.randint(-ALTURA, 0)
+            self.x = random.randint(0, LARGURA)
+            self.size = random.randint(1, 3)
+            self.speed = random.uniform(1, 3)
 
     def draw(self, surface):
         """
         Draw the stars 
         """
-        # Ensure brightness is within valid range
-        bright_color = (int(self.brightness), int(self.brightness), int(self.brightness))  # Adjust color based on brightness
-        pygame.draw.circle(surface, bright_color, (self.x, int(self.y)), int(self.size))
+        pygame.draw.circle(surface, (255, 255, 200), (self.x, int(self.y)), self.size)
 
     def slowdown(self):
         """
@@ -680,17 +570,9 @@ class Star:
         """
         self.is_slowing = True
 
-    def speed_up(self):
-        self.speed = random.uniform(0.1, 0.2)
-        self.is_moving = True
-        self.speeding_up = True
-
-
-
 def title_screen():
     # Create a list of stars
-    global stars
-    stars = [Star() for _ in range(120)]  # 100 stars
+    stars = [Star() for _ in range(80)]  # 100 stars
     global click
     click = False
 
@@ -723,15 +605,16 @@ def title_screen():
                     pygame.quit()
                     sys.exit()
                 if event.key == K_SPACE or event.key == K_RETURN:
-                    menu()
+                    menu(stars)
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     menu(stars)
 
+        # Updates the screen at 60 frames per second 
         pygame.display.update()
+        clock.tick(60)
 
-
-def menu():
+def menu(stars):
     global click
     click = False
 
@@ -741,15 +624,14 @@ def menu():
     button_color_hover = (100, 100, 100)  # Lighter gray
     text_color = (BRANCO)
 
-    planets = create_planets()
-    planet_list = list(planets.values())
-
+    # Define buttons
     buttons = [
-    {
-        "text": planet.name,
-        "action": lambda p=planet: transition(p)
-    }
-    for planet in planet_list
+        {"text": "Button 1", "action": planet1},
+        {"text": "Button 2", "action": planet2},
+        {"text": "Button 3", "action": planet3},
+        {"text": "Button 4", "action": planet4},
+        {"text": "Button 5", "action": planet5},
+        {"text": "Button 6", "action": planet6}
     ]
 
     # Calculate button positions in two rows
@@ -778,8 +660,6 @@ def menu():
     while True:
         screen.fill(PRETO)
         for star in stars:
-            if not star.is_moving:
-                star.speed_up()
             star.update()
             star.draw(screen)
         
@@ -818,11 +698,12 @@ def menu():
                 if event.button == 1:
                     for button_rect, button in button_rects:
                         if button_rect.collidepoint((mx, my)):
-                            button['action']()
+                            transition(button['action'], button['text'], stars)()
         
         pygame.display.update()
+        clock.tick(60)
 
-def transition(planet):
+def transition(planet, planet_name, stars):
     sky_static = False
     while True:
         screen.fill(PRETO)
@@ -833,17 +714,29 @@ def transition(planet):
             star.update()
             star.draw(screen)
 
-        if abs(star.speed) > 0:
+        # if not stars_stopped:
+        #     # Slow down stars
+        #     for star in stars:
+        #         star.slow()
+            
+        #     # Check if all stars have stopped
+        #     stars_stopped = all(star.speed == 0 for star in stars)
+
+        #     for star in stars:
+        #         star.update()
+        #         star.draw(screen)
+
+        if abs(star.speed) > 0.1:
                 stars_stopped = False
         else:
             stars_stopped = True
 
         # If all stars have stopped, transition to game
         if stars_stopped:
-            return game(planet)
+            return game()
 
-        text = 'Get ready to land on ' + planet.name
-        text_surface = pygame.font.SysFont(None, 70).render(text, True, (150, 150, 150))
+        text = 'Get ready to land on ' + planet_name
+        text_surface = pygame.font.SysFont(None, 70).render(text, True, (100, 100, 100))
         text_rect = text_surface.get_rect(center=(LARGURA // 2, ALTURA // 2))
         screen.blit(text_surface, text_rect)
 
@@ -859,7 +752,25 @@ def transition(planet):
                     return
                 
         pygame.display.update()  # Update display each frame
+        clock.tick(60)  # Limit frame rate
+
+def planet1():
+    game()
+
+def planet2():
+    game()
+
+def planet3():
+    game()
+
+def planet4():
+    game()
+
+def planet5():
+    game()
+
+def planet6():
+    game()
 
 if __name__ == "__main__":
-    pygame.mixer.music.play(loops=-1)
     title_screen()
