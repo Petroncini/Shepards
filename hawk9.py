@@ -25,14 +25,10 @@ VERDE = (0, 255, 0)
 VERMELHO = (255, 0, 0)
 AZUL = (0, 0, 255)
 
-GRAVIDADE = 9.8  #m/s^2
 IMPULSO = 7600000    #kg*m/s^2
 RAPIDEZ_ROTACAO = 2 #RAD/s
 MAX_COMBUSTIVEL = 100
 FATOR_ESCALA = 1
-VISCOSIDADE_AR = 0.05
-RESISTENCIA_AR = 50 #na verdade é b
-
 VELOCIDADE_INICIAL = random.uniform(150, 200)
 
 """
@@ -61,6 +57,52 @@ def draw_back_to_menu_button(screen):
 
     return button_rect
 
+class Planet:
+    def __init__(self, name, gravity, air_resistance, background_image_path):
+        self.name = name
+        self.gravity = gravity
+        self.resistance = air_resistance
+        self.background = background_image_path
+
+def create_planets():
+    return {
+        "Earth": Planet("Earth",
+                        gravity = 9.8,
+                        air_resistance = 50,
+                        background_image_path = 'planet_backgrounds/earth.jpg'),
+
+        "Mercury": Planet("Mercury", 
+                          gravity=3.7,
+                          air_resistance = 50,
+                          background_image_path = 'planet_backgrounds/earth.jpg'),
+        
+        "Venus": Planet("Venus", 
+                        gravity=8.87,
+                        air_resistance = 50,
+                        background_image_path = 'planet_backgrounds/earth.jpg'),
+        
+        "Mars": Planet("Mars", 
+                       gravity=3.72,
+                       air_resistance = 50,
+                       background_image_path = 'planet_backgrounds/earth.jpg'),
+        
+        "Moon": Planet("Luna", 
+                       gravity=1.62,
+                       air_resistance = 50,
+                       background_image_path = 'planet_backgrounds/earth.jpg'),
+        
+        "Europa": Planet("Europa", 
+                         gravity=1.31,
+                         air_resistance=5,
+                         background_image_path='planet_backgrounds/europa.jpg'),
+        
+        "Titan": Planet("Titan", 
+                        gravity=1.352,
+                        air_resistance=60,
+                        background_image_path='planet_backgrounds/titan.jpg')
+    }    
+    
+
 class Cloud:
     def __init__(self, x, y):
         self.x = x
@@ -72,11 +114,7 @@ class Cloud:
 
     def update(self):
         self.r += self.expansion_rate
-<<<<<<< HEAD
-        self.expansion_rate -= 0.2
-=======
         self.expansion_rate -= 0.05
->>>>>>> main
         self.a -= 1
         if self.color.a > 0:
             self.color.a -= 1
@@ -107,7 +145,7 @@ class Explosion:
             cloud.draw(screen)
 
     def is_done(self):
-        if(self.clouds[0].a == -15):
+        if(self.clouds[0].a == -30):
             return True
         else:
             return False
@@ -165,14 +203,15 @@ class Rocket:
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
         self.last_time_update = current_time
-        print(f"dt: {dt}")
+
+        #print(f"dt: {dt}")
 
         if not self.colidiu:
             self.vy += GRAVIDADE * dt
 
             self.x += self.vx * FATOR_ESCALA * dt
             self.y += self.vy * FATOR_ESCALA * dt
-            print(f"ADDED {self.vx * FATOR_ESCALA * dt}, {self.vx * FATOR_ESCALA * dt} to rocket position")
+            #print(f"ADDED {self.vx * FATOR_ESCALA * dt}, {self.vx * FATOR_ESCALA * dt} to rocket position")
 
             forca_viscosa_x = -self.vx * RESISTENCIA_AR * dt
             forca_viscosa_y = -self.vy * RESISTENCIA_AR * dt
@@ -295,15 +334,13 @@ def end_game(rocket, message, exploded):
     rocket.colidiu = True
 
 
-def game(stars):
+def game(planet, stars):
+    global GRAVIDADE, RESISTENCIA_AR
+    GRAVIDADE = planet.gravity
+    RESISTENCIA_AR = planet.resistance
 
     rocket = Rocket()
-<<<<<<< HEAD
-    #print(f"created rocket at {rocket.x}, {rocket.y} with velocity {rocket.vx},{rocket.vy}")
     #print(rocket.explosion)
-=======
-    print(rocket.explosion)
->>>>>>> main
     running = True
     landing_pad = pygame.Rect(LARGURA / 2 - 50, ALTURA - 10, 100, 10)
     game_over = False
@@ -313,25 +350,22 @@ def game(stars):
     qtd_impulsos = 2
 
     while running:
-<<<<<<< HEAD
-        #print(f"rocket at {rocket.x},{rocket.y} vel: {rocket.vx},{rocket.vy}")
-        clock.tick(60)
-=======
         # print(f"rocket at {rocket.x},{rocket.y} vel: {rocket.vx},{rocket.vy}")
->>>>>>> main
         screen.fill(PRETO)
         
         for star in stars:
             star.speed = 0
             star.update()
             star.draw(screen)
+
+        #screen.blit(pygame.image.load(planet.background), (0, 0))
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    running = False
+                    menu([Star() for _ in range(80)])
                 if event.key == pygame.K_SPACE and qtd_impulsos:
                     qtd_impulsos -= 1
                     rocket.aplicar_impulso()
@@ -359,15 +393,7 @@ def game(stars):
                 end_game(rocket, "Flight Terminated", True)
                 game_over = True
             
-
-<<<<<<< HEAD
-        #print(rocket.colidiu)
         rocket.update()
-        #print(f"after update rocket at {rocket.x},{rocket.y} vel: {rocket.vx},{rocket.vy}")
-=======
-
-        rocket.update()
->>>>>>> main
 
         rocket_points = [
             (rocket.x - rocket.largura / 2, rocket.y - rocket.altura / 2),
@@ -412,7 +438,7 @@ def game(stars):
             mx, my = pygame.mouse.get_pos()
             if back_button_rect.collidepoint(mx, my):
                 if click:
-                    menu()
+                    menu([Star() for _ in range(80)])
         draw_landing_pad(screen)
 
         if game_over:
@@ -454,7 +480,7 @@ class Star:
         self.speed = random.uniform(1, 2)  # Falling speed
         self.is_slowing = False
         self.brightness = 255  # Initial brightness
-        self.twinkle_speed = random.uniform(1, 4)  # Speed of twinkling
+        self.twinkle_speed = random.uniform(20, 80)  # Speed of twinkling
 
     def update(self):
         if self.speed:
@@ -471,13 +497,15 @@ class Star:
                 self.size = random.randint(1, 2)
                 self.speed = random.uniform(1, 2)
 
-        self.brightness = max(0, min(255, self.brightness + self.twinkle_speed))
-        if self.brightness > 255 or self.brightness < 100:  # Adjust these values for twinkling range
+        self.brightness += self.twinkle_speed
+        if self.brightness >= 255 or self.brightness <= 200:
             self.twinkle_speed *= -1  # Reverse direction of brightness change
+        self.brightness = max(100, min(255, self.brightness))  # Clamp after updating
+
 
     def draw(self, surface):
         # Ensure brightness is within valid range
-        bright_color = (255, 255, int(self.brightness))  # Adjust color based on brightness
+        bright_color = (int(self.brightness), int(self.brightness), int(self.brightness))  # Adjust color based on brightness
         pygame.draw.circle(surface, bright_color, (self.x, int(self.y)), int(self.size))
 
     def slowdown(self):
@@ -537,14 +565,15 @@ def menu(stars):
     button_color_hover = (100, 100, 100)  # Lighter gray
     text_color = (BRANCO)
 
-    # Define buttons
+    planets = create_planets()
+    planet_list = list(planets.values())
+
     buttons = [
-        {"text": "Planet 1", "action": planet1},
-        {"text": "Planet 2", "action": planet2},
-        {"text": "Planet 3", "action": planet3},
-        {"text": "Planet 4", "action": planet4},
-        {"text": "Planet 5", "action": planet5},
-        {"text": "Planet 6", "action": planet6}
+    {
+        "text": planet.name,
+        "action": lambda p=planet: transition(p, stars)
+    }
+    for planet in planet_list
     ]
 
     # Calculate button positions in two rows
@@ -611,12 +640,12 @@ def menu(stars):
                 if event.button == 1:
                     for button_rect, button in button_rects:
                         if button_rect.collidepoint((mx, my)):
-                            transition(button['action'], button['text'], stars)()
+                            button['action']()
         
         pygame.display.update()
         clock.tick(60)
 
-def transition(planet, planet_name, stars):
+def transition(planet, stars):
     sky_static = False
     while True:
         screen.fill(PRETO)
@@ -634,9 +663,9 @@ def transition(planet, planet_name, stars):
 
         # If all stars have stopped, transition to game
         if stars_stopped:
-            return planet(stars)
+            return game(planet, stars)
 
-        text = 'Get ready to land on ' + planet_name
+        text = 'Get ready to land on ' + planet.name
         text_surface = pygame.font.SysFont(None, 70).render(text, True, (150, 150, 150))
         text_rect = text_surface.get_rect(center=(LARGURA // 2, ALTURA // 2))
         screen.blit(text_surface, text_rect)
@@ -654,24 +683,6 @@ def transition(planet, planet_name, stars):
                 
         pygame.display.update()  # Update display each frame
         clock.tick(60)  # Limit frame rate
-
-def planet1(stars):
-    game(stars)
-
-def planet2():
-    game()
-
-def planet3():
-    game()
-
-def planet4():
-    game()
-
-def planet5():
-    game()
-
-def planet6():
-    game()
 
 if __name__ == "__main__":
     title_screen()
