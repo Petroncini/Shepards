@@ -171,7 +171,6 @@ class Rocket:
 
             self.x += self.vx * FATOR_ESCALA * dt
             self.y += self.vy * FATOR_ESCALA * dt
-            print(f"ADDED {self.vx * FATOR_ESCALA * dt}, {self.vx * FATOR_ESCALA * dt} to rocket position")
 
             forca_viscosa_x = -self.vx * RESISTENCIA_AR * dt
             forca_viscosa_y = -self.vy * RESISTENCIA_AR * dt
@@ -268,14 +267,13 @@ class Rocket:
             pontos_trajetoria.append((int(x_futuro), int(y_futuro)))
 
             if y_futuro > ALTURA or y_futuro < 0 or x_futuro > (2*LARGURA) or x_futuro < 0:
-                print(f"breaking at {x_futuro}")
                 break
 
             dt += 0.01
 
         
         if len(pontos_trajetoria) > 1:
-            superfice = pygame.Surface((ALTURA, LARGURA), pygame.SRCALPHA)
+            superfice = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
             cor = pygame.Color(255, 0, 0, 100)
             pygame.draw.lines(superfice, cor, False, pontos_trajetoria, 2)
             screen.blit(superfice, (0, 0))
