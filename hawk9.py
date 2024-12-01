@@ -64,10 +64,11 @@ def draw_back_to_menu_button(screen):
     return button_rect
 
 class Planet:
-    def __init__(self, name, gravity, air_density, background_image_path):
+    def __init__(self, name, gravity, air_density, pad_color, background_image_path):
         self.name = name
         self.gravity = gravity
         self.density = air_density
+        self.pad_color = pad_color
         self.background = background_image_path
 
 def create_planets():
@@ -75,31 +76,37 @@ def create_planets():
         "Earth": Planet("Earth",
                         gravity = 9.8,
                         air_density = 1.225,
+                        pad_color = (61, 73, 144),
                         background_image_path = 'planet_backgrounds/earth.jpg'),
         
         "Venus": Planet("Venus", 
                         gravity=8.87,
                         air_density = 65,
+                        pad_color = (185, 115, 31),
                         background_image_path = 'planet_backgrounds/earth.jpg'),
         
         "Mars": Planet("Jupiter", 
                        gravity= 24.79,
                        air_density = 0.16,
+                       pad_color = (163, 122, 92),
                        background_image_path = 'planet_backgrounds/earth.jpg'),
         
         "Moon": Planet("Luna", 
                        gravity=1.62,
                        air_density = 0,
+                       pad_color = (194, 193, 191),
                        background_image_path = 'planet_backgrounds/earth.jpg'),
         
         "Europa": Planet("Europa", 
                          gravity=1.31,
                          air_density=0,
+                         pad_color = (179, 159, 156),
                          background_image_path='planet_backgrounds/europa.jpg'),
         
         "Titan": Planet("Titan", 
                         gravity=1.352,
                         air_density= 5.4,
+                        pad_color = (84, 130, 112),
                         background_image_path='planet_backgrounds/titan.jpg')
     }    
     
@@ -325,7 +332,7 @@ def draw_landing_pad(screen):
     pad_height = 10
     pad_x = LARGURA / 2 - pad_width / 2
     pad_y = ALTURA - pad_height
-    pygame.draw.rect(screen, VERDE, (pad_x, pad_y, pad_width, pad_height))
+    pygame.draw.rect(screen, PAD_COLOR, (pad_x, pad_y, pad_width, pad_height))
 
 
 def end_game(rocket, message, exploded):
@@ -352,9 +359,10 @@ def create_gradient_surface(width, height, background_color):
 
 
 def game(planet, stars):
-    global GRAVIDADE, DENSIDADE_AR
+    global GRAVIDADE, DENSIDADE_AR, PAD_COLOR
     GRAVIDADE = planet.gravity
     DENSIDADE_AR = planet.density
+    PAD_COLOR = planet.pad_color
 
     rocket = Rocket()
     #print(rocket.explosion)
