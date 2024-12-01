@@ -94,7 +94,7 @@ def create_planets():
         
         "Europa": Planet("Europa", 
                          gravity=1.31,
-                         air_density=5,
+                         air_density=0,
                          background_image_path='planet_backgrounds/europa.jpg'),
         
         "Titan": Planet("Titan", 
@@ -433,13 +433,13 @@ def game(planet, stars):
             rocket.draw_flame(screen)
             rocket.draw(screen)
             # Draw the "Back to Menu" button
-            back_button_rect = draw_back_to_menu_button(screen)
+            # back_button_rect = draw_back_to_menu_button(screen)
 
             # Check if the back button was clicked
-            mx, my = pygame.mouse.get_pos()
-            if back_button_rect.collidepoint(mx, my):
-                if click:
-                    menu([Star() for _ in range(80)])
+            # mx, my = pygame.mouse.get_pos()
+            # if back_button_rect.collidepoint(mx, my):
+            #     if click:
+            #         menu([Star() for _ in range(80)])
         draw_landing_pad(screen)
 
         if game_over:
