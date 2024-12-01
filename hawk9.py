@@ -88,7 +88,7 @@ def create_planets():
         "Mars": Planet("Jupiter", 
                        gravity= 24.79,
                        air_density = 0.16,
-                       pad_color = (163, 122, 92),
+                       pad_color = (201, 87, 43),
                        background_image_path = 'planet_backgrounds/earth.jpg'),
         
         "Moon": Planet("Luna", 
@@ -198,7 +198,7 @@ class Rocket:
     def rotate_left(self):
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
-
+        print(f"ang: {self.angulo}")
         self.angulo -= RAPIDEZ_ROTACAO * dt
 
     def rotate_right(self):
@@ -350,7 +350,7 @@ def create_gradient_surface(width, height, background_color):
         alpha = int(255 * (y / height) / 2)  # 128 is 50% transparency (255 = opaque, 0 = transparent)
         
         # Create a color with the desired alpha value (RGBA)
-        color = (background_color, alpha)
+        color = background_color + (alpha,)
         
         # Draw a line across the surface with the calculated transparency
         pygame.draw.line(gradient_surface, color, (0, y), (width, y))
@@ -363,6 +363,8 @@ def game(planet, stars):
     GRAVIDADE = planet.gravity
     DENSIDADE_AR = planet.density
     PAD_COLOR = planet.pad_color
+
+    gradient_background = create_gradient_surface(LARGURA, ALTURA, PAD_COLOR)
 
     rocket = Rocket()
     #print(rocket.explosion)
@@ -377,6 +379,7 @@ def game(planet, stars):
     while running:
         # print(f"rocket at {rocket.x},{rocket.y} vel: {rocket.vx},{rocket.vy}")
         screen.fill(PRETO)
+        screen.blit(gradient_background, (0, 0))
         
         for star in stars:
             star.speed = 0
