@@ -15,6 +15,8 @@ pygame.display.set_caption("Rocket Landing Game")
 font_text = pygame.font.SysFont(None, 30)
 font_h1 = pygame.font.SysFont(None, 80)
 clock = pygame.time.Clock()
+pygame.mixer.init()
+pygame.mixer.music.load("Space.mp3")
 
 # A variable to check for the status later
 click = False
@@ -191,11 +193,15 @@ class Rocket:
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
         self.angulo -= RAPIDEZ_ROTACAO * dt
+        if self.angulo < -math.pi:
+            self.angulo = 2*math.pi + self.angulo
 
     def rotate_right(self):
         current_time = time.perf_counter()
         dt = (current_time - self.last_time_update)
         self.angulo += RAPIDEZ_ROTACAO * dt
+        if self.angulo > math.pi:
+            self.angulo = -2*math.pi + self.angulo
 
     def update(self):
         current_time = time.perf_counter()
@@ -273,7 +279,7 @@ class Rocket:
         font = pygame.font.Font(None, 36)
         fuel_text = font.render(f"Fuel: {int(self.combustivel)}", True, BRANCO)
         speed_text = font.render(f"Speed: {int(math.sqrt(self.vx**2 + self.vy**2))}", True, BRANCO)
-        angle_text = font.render(f"Angle: {int((self.angulo) * (180/math.pi))}", True, BRANCO)
+        angle_text = font.render(f"Angle: {((int((-(self.angulo)) * (180/math.pi)) + 90))%360}", True, BRANCO)
     
         screen.blit(fuel_text, (10, 10))
         screen.blit(speed_text, (10, 40))
@@ -709,4 +715,5 @@ def transition(planet):
         clock.tick(60)  # Limit frame rate
 
 if __name__ == "__main__":
+    pygame.mixer.music.play(loops=-1)
     title_screen()
