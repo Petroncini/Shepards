@@ -96,7 +96,7 @@ def create_planets():
         "Europa": Planet("Europa", 
                          gravity=1.31,
                          air_density=0,
-                         pad_color = (179, 159, 156)),
+                         pad_color = (188,126,92)),
         
         "Titan": Planet("Titan", 
                         gravity=1.352,
@@ -136,7 +136,7 @@ class Explosion:
         self.y = y
         self.clouds = []
         for _ in range(10):
-            self.clouds.append(Cloud(self.x + random.randrange(1, 50), self.y + random.randrange(1, 50)))
+            self.clouds.append(Cloud(self.x + random.randrange(1, 100), self.y + random.randrange(1, 100)))
     
     def update(self):
         for cloud in self.clouds:
