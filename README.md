@@ -196,6 +196,10 @@ O jogo foi desenvolvido em Python utilizando a biblioteca Pygame, uma ferramenta
 - **Instalação e Dependências:** 
     ```bash
     pip install pygame
+    
+    ```bash
+    sudo apt-get install git-lfs
+    git lfs pull
 - **Como jogar**
 
 Para jogar, aperte a tecla espaço ou clique o rato na tela inicial. Depois disso, escolha um dos 6 planetas onde você pode realizar o pouso. Cada um tem condições gravitacionais e atmosféricas diferentes.
