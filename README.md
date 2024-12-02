@@ -211,5 +211,5 @@ Para o pouso se bem sucedido, é necessário fazer contato com a plataforma com 
 Boa sorte!
 
 ## Referências:
-    **Apostila de Dinâmica do Professor Esmerindo Bernardes
-    **Aulas da Professora Krissia de Zawadzki
+* Apostila de Dinâmica do Professor Esmerindo Bernardes
+* Aulas da Professora Krissia de Zawadzki
