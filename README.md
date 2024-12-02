@@ -75,6 +75,7 @@ $$\begin{equation}
 \end{equation}$$
 
 ### EDOs
+A resolução das EDO's apresentada a seguir é uma versão simplificada do movimento que acontece no jogo, pois não consideramos a massa nem a gravidade como quantidades variáveis. Portanto, note que a EDO é solucionada considerando a massa e a gravidade como constantes. 
 Aplicando a 2ª lei de Newton, conseguimos deduzir as seguintes EDOs do nosso sistema:
 
 $$\begin{equation}
@@ -130,8 +131,6 @@ $$\begin{equation}
 $$\begin{equation}
 \ddot{y}(t) + \frac{1}{k'_1} \cdot \dot{y}(t) +  k'_2 = 0
 \end{equation}$$
-
-A resolução das EDO's apresentada a seguir é uma versão simplificada do movimento que acontece no jogo, pois não consideramos a massa nem a gravidade como quantidades variáveis. Portanto, note que a EDO é solucionada considerando a massa e a gravidade como constantes. 
 
 Vamos determinar a equação que resolve as EDO's:
 
@@ -198,7 +197,7 @@ O jogo foi desenvolvido em Python utilizando a biblioteca Pygame, uma ferramenta
 - **Instalação e Dependências:** 
     ```bash
     pip install pygame
-    
+
     sudo apt-get install git-lfs
     git lfs pull
 - **Como jogar**
@@ -212,3 +211,5 @@ Para o pouso se bem sucedido, é necessário fazer contato com a plataforma com 
 Boa sorte!
 
 ## Referências:
+    **Apostila de Dinâmica do Professor Esmerindo Bernardes
+    **Aulas da Professora Krissia de Zawadzki
