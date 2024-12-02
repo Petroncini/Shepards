@@ -1,4 +1,4 @@
-# Pouso do foguete
+# Suicide Burn
 
 ## Descrição Básica do Projeto
 Este projeto é um jogo criado para simular, de forma simplificada, o pouso de um foguete em diversos ambientes. O objetivo
@@ -40,8 +40,8 @@ $$\begin{equation}
 #### Força de propulsão do foguete
 Fora da simulação, um foguete queima seu combustível, expelindo gases, para conseguir, por meio da 3º Lei de Newton, gerar uma
 força de reação, que por sua vez propele o foguete na direção desejada.
-Análogo à isso, nosso jogo usa um IMPULSO do combustível de $500000 \frac{kg.m}{s^2}$, que, ao jogador acionar o propulsor,
-gera uma força de propulsiona o foguete.
+Análogo à isso, nosso jogo usa um IMPULSO do combustível de $500000 \frac{kg.m}{s^2}$, que, ao o jogador acionar o propulsor,
+gera uma força que propulsiona o foguete.
 Podemos modelor tal força dessa forma em nosso sistema:
 <p align="center">
     <img alt="Foguete" src="/images/foguete_propu.png">
@@ -56,7 +56,7 @@ $$\begin{equation}
 \vec{F}_{propu y} = \text{IMPULSO} \cdot \cos{\theta} \hat{j}
 \end{equation}$$
 
-Em que $\theta$ é o ângulo definido pelo jogador que o foguete foi rotacionado.
+Em que $\theta$ é o ângulo, definido pelo jogador, que o foguete foi rotacionado.
 
 ### Vetores Cinemâticos
 Agora, para que possamos descrever o movimento do foguete em nosso sistema de cordenadas, precisamos escrever nossos vetores
@@ -202,11 +202,13 @@ O jogo foi desenvolvido em Python utilizando a biblioteca Pygame, uma ferramenta
     git lfs pull
 - **Como jogar**
 
-Para jogar, aperte a tecla espaço ou clique o rato na tela inicial. Depois disso, escolha um dos 6 planetas onde você pode realizar o pouso. Cada um tem condições gravitacionais e atmosféricas diferentes.
+Para jogar, aperte a tecla espaço ou clique o mouse na tela inicial. Depois disso, escolha um dos 6 planetas onde você pode realizar o pouso. Cada um tem condições gravitacionais e atmosféricas diferentes.
 
-O objetivo principal é pousar o foguete na plataforma ao centro do ecrã, controlando a rotação e o propulsor da nave. Você pode rotacionar o foguete com as setas esquerda e direita do teclado e ativar o propulsor com a tecla espaço. Depois de ativado, o propulsor pode ser desativando acionando novamente a tecla espaço. Mas cuidado, depois de desativado, o motor não pode ser reativado. Para diminuir e aumetar a potência do motor, utilize as teclas Q e E. Para abortar um voo, precione a tecla A. 
+O objetivo principal é pousar o foguete na plataforma ao centro da tela, controlando a rotação e o propulsor da nave. Você pode rotacionar o foguete com as setas esquerda e direita do teclado e ativar o propulsor com a tecla espaço. Depois de ativado, o propulsor pode ser desativando acionando novamente a tecla espaço. Mas cuidado, depois de desativado, o motor não pode ser reativado. Para diminuir e aumetar a potência do motor, utilize as teclas Q e E. Para abortar um voo, precione a tecla A. 
 
 Para o pouso se bem sucedido, é necessário fazer contato com a plataforma com velocidade relativa menor que 50 e com ângulo próximo de 90 graus.
+
+Para voltar para a tela de seleção de planetas basta apertar Esc.
 
 Boa sorte!
 
