@@ -131,6 +131,8 @@ $$\begin{equation}
 \ddot{y}(t) + \frac{1}{k'_1} \cdot \dot{y}(t) +  k'_2 = 0
 \end{equation}$$
 
+A resolução das EDO's apresentada a seguir é uma versão simplificada do movimento que acontece no jogo, pois não consideramos a massa nem a gravidade como quantidades variáveis. Portanto, note que a EDO é solucionada considerando a massa e a gravidade como constantes. 
+
 Vamos determinar a equação que resolve as EDO's:
 
 Primeiramente podemos reescrever a equação da seguinte forma:
