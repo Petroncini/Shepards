@@ -35,30 +35,27 @@ AZUL = (0, 0, 255)
 GRAVIDADE = 9.8  # Gravity [m/s^2]
 IMPULSO = 7600000 # Impulse [kg*m/s^2]
 RAPIDEZ_ROTACAO = 2 # Rotation speed [RAD/s]
-MAX_COMBUSTIVEL = 100 # Fuel 
+MAX_COMBUSTIVEL = 100 # Fuel quantity 
 FATOR_ESCALA = 1 # Scale factor
-VELOCIDADE_INICIAL = random.uniform(150, 200) # Initial speed random value between 150-200
-COEFICIENTE_ARRASTO = 1000
-FUEL_WEIGHT = 1300
-DRY_MASS = 22000
-DROPOFF_RATE = 1200
+VELOCIDADE_INICIAL = random.uniform(150, 200) # Initial speed, random value between 150-200
+COEFICIENTE_ARRASTO = 1000 
+FUEL_WEIGHT = 1300 
+DRY_MASS = 22000 
+DROPOFF_RATE = 1200 
 
 VELOCIDADE_INICIAL = random.uniform(150, 200)
 
-"""
-A function that can be used to write text on our screen and buttons
-"""
 def draw_text(text, font, color, surface, x, y):
     """
     A function that can be used to write text on our screen and buttons
 
     Parameters:
-        text: the text displayed 
-        font: the font used to render the text 
-        color: the color of the text 
-        surface: the surface where the text will be drawn
-        x: the x-coordinate of the top left corner 
-        y: the y-coordinate of the top left corner 
+        text (str): the text displayed 
+        font (pygame.font.Font): the font used to render the text 
+        color (tuple[int, int, int]): the color of the text 
+        surface (pygame.Surface): the surface where the text will be drawn
+        x (int): the x-coordinate of the top left corner 
+        y (int): the y-coordinate of the top left corner 
     """
     textobj = font.render(text, 1, color)
     textrect = textobj.get_rect()
@@ -70,10 +67,10 @@ def draw_back_to_menu_button(screen):
     Draws a button which return to the menu
 
     Parameters:
-        screen: the surface where the button will be drawn 
+        screen (pygame.Surface): the surface where the button will be drawn 
     
     Return:
-        button_rect: the retangle representing the button's position and size
+        button_rect (pygame.Rect): the retangle representing the button's position and size
     """
     # Button settings (size and position)
     button_width, button_height = 150, 30
@@ -94,12 +91,24 @@ def draw_back_to_menu_button(screen):
 
 class Planet:
     def __init__(self, name, gravity, air_density, pad_color):
+        """
+        Inicializes a class planet 
+
+        Parameters:
+            name (str): name of the planet
+            gravity (float): gravity of the planet
+            air_density (float): air density 
+            pad_color (tuple[int, int, int]): color of the landing pad 
+        """
         self.name = name
         self.gravity = gravity
         self.density = air_density
         self.pad_color = pad_color
 
 def create_planets():
+    """
+    Function that creates the planets 
+    """
     return {
         "Earth": Planet("Earth",
                         gravity = 9.8,
@@ -221,19 +230,19 @@ class Rocket:
         self.x = LARGURA / 2 # x-coordinate 
         self.y = ALTURA / 4 # y-coordinate 
         self.angulo = random.uniform(-(math.pi)/4 ,(math.pi)/4)  # Angle in radians
-        self.rapidez = VELOCIDADE_INICIAL
-        self.vx = math.cos(self.angulo + (math.pi/2)) * self.rapidez     # Horizontal velocity
-        self.vy = math.sin(self.angulo + (math.pi/2)) * self.rapidez     # Vertical velocity
+        self.rapidez = VELOCIDADE_INICIAL # velocity 
+        self.vx = math.cos(self.angulo + (math.pi/2)) * self.rapidez    # Horizontal velocity
+        self.vy = math.sin(self.angulo + (math.pi/2)) * self.rapidez    # Vertical velocity
         self.x -= self.vx * 1
         self.y -= self.vy * 1
-        self.combustivel = MAX_COMBUSTIVEL # fuel 
-        self.massa = DRY_MASS + self.combustivel * FUEL_WEIGHT # mass of the rocket 
-        self.cor = BRANCO # color 
+        self.combustivel = MAX_COMBUSTIVEL 
+        self.massa = DRY_MASS + self.combustivel * FUEL_WEIGHT
+        self.cor = BRANCO 
         self.colidiu = False # collision status 
-        self.impulsionando = False 
+        self.impulsionando = False # whether the rocket has thrust
         self.acelerador = 1 # Controls the rocket's thrust 
-        self.altura = 12 # height of the rocket 
-        self.largura = 5 # width of the rocket 
+        self.altura = 12
+        self.largura = 5 
         self.ingnited = False 
         self.explosion = None # explosion status 
         self.message = None # message status 
@@ -369,7 +378,7 @@ class Rocket:
             rotated_points.append((new_x, new_y))
         # Draws the rocket 
         pygame.draw.polygon(screen, self.cor, rotated_points)
-        #  Defines the informations 
+        #  Defines the information 
         font = pygame.font.Font(None, 36)
         fuel_text = font.render(f"Fuel: {int(self.combustivel)}", True, BRANCO)
         speed_text = font.render(f"Speed: {int(math.sqrt(self.vx**2 + self.vy**2))}", True, BRANCO)
@@ -439,10 +448,11 @@ def draw_landing_pad(screen):
 def end_game(rocket, message, exploded):
     """ 
     Function that handles end game given the result 
+
     Parameters:
-    rocket: a ca
-    message: the message to be displayed 
-    exploded: if the rocket has exploded 
+    rocket (Rocket): a class rocket 
+    message (str): the message to be displayed 
+    exploded (bool): if the rocket has exploded 
     """
     rocket.message = message
     # If the rocket exploded there's an explosin 
@@ -451,7 +461,9 @@ def end_game(rocket, message, exploded):
     rocket.colidiu = True
 
 def create_gradient_surface(width, height, background_color):
-    # Create a new surface with the same dimensions as the screen
+    """
+    Creates a new surface with the same dimensions as the screen
+    """
     gradient_surface = pygame.Surface((width, height), pygame.SRCALPHA)
     
     for y in range(height):
@@ -468,7 +480,7 @@ def create_gradient_surface(width, height, background_color):
 
 
 def game(planet):
-    # Initializes the game 
+    # Initializes the game according to the desired planet 
     global GRAVIDADE, DENSIDADE_AR, PAD_COLOR
     GRAVIDADE = planet.gravity
     DENSIDADE_AR = planet.density
@@ -477,7 +489,7 @@ def game(planet):
     gradient_background = create_gradient_surface(LARGURA, ALTURA, PAD_COLOR)
 
     rocket = Rocket()
-    running = True # Controls game loop 
+    running = True # controls game loop 
     landing_pad = pygame.Rect(LARGURA / 2 - 50, ALTURA - 10, 100, 10)
     game_over = False
     landed = False # if the rocket has landed 
@@ -502,6 +514,7 @@ def game(planet):
                 # If the player presses escape, the game ends 
                 if event.key == pygame.K_ESCAPE:
                     menu()
+                # Controls if the player can apply impulse 
                 if event.key == pygame.K_SPACE and qtd_impulsos:
                     qtd_impulsos -= 1
                     rocket.aplicar_impulso()
@@ -509,7 +522,6 @@ def game(planet):
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = True
-
         
         keys = pygame.key.get_pressed()
         
@@ -528,8 +540,6 @@ def game(planet):
             if keys[pygame.K_a]:
                 end_game(rocket, "Flight Terminated", True)
                 game_over = True
-            
-
             
         rocket.update()
 
@@ -631,7 +641,7 @@ class Star:
 
     def update(self):
         """
-        Updates the speed of the stars and its position 
+        Updates the speed of the stars and theirs position 
         """
         if self.speed == 0:
             self.is_slowing = False
@@ -681,16 +691,22 @@ class Star:
         self.is_slowing = True
 
     def speed_up(self):
+        """
+        Changes the speed of the star to a value between (0.1 and 0.2)
+        """
         self.speed = random.uniform(0.1, 0.2)
         self.is_moving = True
         self.speeding_up = True
 
 
-
 def title_screen():
+    """
+    Function that inicializes the screen with falling stars, and the title is displayed
+    """
     # Create a list of stars
     global stars
     stars = [Star() for _ in range(120)]  # 100 stars
+    # Variable that tracks mouse clicks 
     global click
     click = False
 
@@ -732,9 +748,13 @@ def title_screen():
 
 
 def menu():
+    """ 
+    Function that displays the planet selection menu 
+    """
     global click
     click = False
 
+    # Button settings 
     button_width, button_height = 200, 60
     button_y_spacing = 30
     button_color_normal = (50, 50, 50)  # Dark gray
@@ -823,6 +843,9 @@ def menu():
         pygame.display.update()
 
 def transition(planet):
+    """
+    Function that handles the transition between the menu and the game start 
+    """
     sky_static = False
     while True:
         screen.fill(PRETO)
@@ -834,7 +857,7 @@ def transition(planet):
             star.draw(screen)
 
         if abs(star.speed) > 0:
-                stars_stopped = False
+            stars_stopped = False
         else:
             stars_stopped = True
 
@@ -842,11 +865,13 @@ def transition(planet):
         if stars_stopped:
             return game(planet)
 
+        # Message indicating to which planet the player is going 
         text = 'Get ready to land on ' + planet.name
         text_surface = pygame.font.SysFont(None, 70).render(text, True, (150, 150, 150))
         text_rect = text_surface.get_rect(center=(LARGURA // 2, ALTURA // 2))
         screen.blit(text_surface, text_rect)
 
+        # Determines whether to quit game depending on the user 
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
