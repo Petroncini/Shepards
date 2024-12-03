@@ -67,7 +67,7 @@ $$\begin{equation}
 \end{equation}$$
 
 $$\begin{equation}
-\vec{v}(t) =  \dot{x} (t) \hat{i} + \dot{x} (t) \hat{j}
+\vec{v}(t) =  \dot{x} (t) \hat{i} + \dot{y} (t) \hat{j}
 \end{equation}$$
 
 $$\begin{equation}
@@ -96,7 +96,7 @@ $$\begin{equation}
 \ddot{y}(t) \cdot m \hat{j} = \text{IMPULSO} \cdot \cos{\theta} \hat{j} - b \cdot v_y(t) \hat{j} - m \cdot g
 \end{equation}$$
 
-Vamos resolver a primeira (eixo x):
+Vamos simplificar a primeira (eixo x):
 
 $$\begin{equation}
 \ddot{x}(t) \cdot m = \text{IMPULSO} \cdot \sin{\theta} - b \cdot v_x(t)
@@ -114,7 +114,7 @@ $$\begin{equation}
 \ddot{x}(t) + \frac{1}{k_1} \cdot \dot{x}(t) + k_2 = 0
 \end{equation}$$
 
-Agora, vamos resolver a segunda (eixo y):
+Agora, vamos simplificar a segunda (eixo y):
 
 $$\begin{equation}
 \ddot{y}(t) \cdot m = \text{IMPULSO} \cdot \cos{\theta} - b \cdot v_y(t) - m \cdot g
@@ -137,17 +137,17 @@ Vamos determinar a equação que resolve as EDO's:
 Primeiramente podemos reescrever a equação da seguinte forma:
 
 $$\begin{equation}
-\dot{v_x}(t) + \frac{1}{k_1} \cdot {v_x}(t) + k_2 = 0
+\dot{v}_x(t) + \frac{1}{k_1} \cdot {v}_x(t) + k_2 = 0
 \end{equation}$$
 
-Agora, utilizando uma mudança de variável dependente $$v_z$$ para $$u = k_1^{-1}v_x + k_2$$. Vamos calcular $$\dot{v_x}$$ em relação a $$u$$. 
+Agora, utilizando uma mudança de variável dependente $$v_z$$ para $$u = k_1^{-1}v_x + k_2$$. Vamos calcular $$\dot{v}_x$$ em relação a $$u$$. 
 
 $$\begin{equation}
-\dot{v_x} = u \cdot k_1 - g 
+\dot{v}_x = u \cdot k_1 - g 
 \end{equation}$$
 
 $$\begin{equation}
-\dot{v_x} = \dot{u} \cdot k_1 
+\dot{v}_x = \dot{u} \cdot k_1 
 \end{equation}$$
 
 Substituindo esse resultado na equação:
@@ -179,13 +179,13 @@ u(t) = Ce^{-\frac{t}{k_1}} \text{, note que, } C = e^{C'}
 Determinamos a equação de $v_z(t)$ como:
 
 $$\begin{equation}
-v_z(t) = -k_2k_1(1-e^{-t/k_1})
+v_x(t) = -k_2k_1(1-e^{-t/k_1})
 \end{equation}$$
 
-Integrando ambos os lados da equação, conseguimos a equação da trajetória  $$z(t)$$
+Integrando ambos os lados da equação, conseguimos a equação da trajetória  $$x(t)$$
 
 $$\begin{equation}
-z(t) = -k_2k_1(C + t + k_1e^{-t/k_1})
+x(t) = -k_2k_1(C + t + k_1e^{-t/k_1})
 \end{equation}$$
 
 Também é possível perceber que a equação do movimento no eixo y pode ser resolvido com a mesma equação.
