@@ -205,7 +205,7 @@ O jogo foi desenvolvido em Python utilizando a biblioteca Pygame, uma ferramenta
 
 Para jogar, aperte a tecla espaço ou clique o mouse na tela inicial. Depois disso, escolha um dos 6 planetas onde você pode realizar o pouso. Cada um tem condições gravitacionais e atmosféricas diferentes.
 
-O objetivo principal é pousar o foguete na plataforma ao centro da tela, controlando a rotação e o propulsor da nave. Você pode rotacionar o foguete com as setas esquerda e direita do teclado e ativar o propulsor com a tecla espaço. Depois de ativado, o propulsor pode ser desativando acionando novamente a tecla espaço. Mas cuidado, depois de desativado, o motor não pode ser reativado. Para diminuir e aumetar a potência do motor, utilize as teclas Q e E. Para abortar um voo, precione a tecla A. 
+O objetivo principal é pousar o foguete na plataforma ao centro da tela, controlando a rotação e o propulsor da nave. Você pode rotacionar o foguete com as setas esquerda e direita do teclado e ativar o propulsor com a tecla espaço. Depois de ativado, o propulsor pode ser desativando acionando novamente a tecla espaço. Mas cuidado, depois de desativado, o motor não pode ser reativado. Para diminuir e aumetar a potência do motor, utilize as teclas Q e E. Para abortar um voo, precione a tecla A. Se desafie a pousar com a trajetória oculta pressionando a tecla T.
 
 Para o pouso se bem sucedido, é necessário fazer contato com a plataforma com velocidade relativa menor que 50 e com ângulo próximo de 90 graus.
 
