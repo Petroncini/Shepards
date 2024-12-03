@@ -176,7 +176,7 @@ $$\begin{equation}
 u(t) = Ce^{-\frac{t}{k_1}} \text{, note que, } C = e^{C'} 
 \end{equation}$$
 
-Determinamos a equação de $v_z(t)$ como:
+Determinamos a equação de $v_x(t)$ como:
 
 $$\begin{equation}
 v_x(t) = -k_2k_1(1-e^{-t/k_1})
