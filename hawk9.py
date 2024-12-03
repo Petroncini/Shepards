@@ -40,7 +40,7 @@ FATOR_ESCALA = 1 # Scale factor
 VELOCIDADE_INICIAL = random.uniform(150, 200) # Initial speed, random value between 150-200
 COEFICIENTE_ARRASTO = 1000 
 FUEL_WEIGHT = 1300 
-DRY_MASS = 22000 
+DRY_MASS = 22000 # mass of the rocket (without fuel)
 DROPOFF_RATE = 1200 
 
 VELOCIDADE_INICIAL = random.uniform(150, 200)
@@ -150,8 +150,8 @@ class Cloud:
         """
         Initializes a new cloud instance in the position (x, y)
         """
-        self.x = x # x-coordinate 
-        self.y = y # y-coordinate 
+        self.x = x 
+        self.y = y 
         self.r = 0 # radius of the cloud 
         # Defines a random color in a range of red and orange with semi-transparency 
         self.color = pygame.Color(random.randint(200, 255), random.randint(50, 150), 0, 150) 
@@ -175,9 +175,9 @@ class Cloud:
         """
         Draws the cloud in the given screen 
         """
-        # Create a surface 
+        # Creates a surface 
         superfice = pygame.Surface((2*ALTURA, 2*LARGURA), pygame.SRCALPHA)
-        # Draw a circle with the given positions and characteristics 
+        # Draws a circle with the given positions and characteristics 
         pygame.draw.circle(superfice, self.color, center=(self.x, self.y), radius = self.r)
         # Copy the cloud surface into the main screen 
         screen.blit(superfice, (0, 0))
@@ -236,14 +236,14 @@ class Rocket:
         self.x -= self.vx * 1
         self.y -= self.vy * 1
         self.combustivel = MAX_COMBUSTIVEL 
-        self.massa = DRY_MASS + self.combustivel * FUEL_WEIGHT
-        self.cor = BRANCO 
+        self.massa = DRY_MASS + self.combustivel * FUEL_WEIGHT 
         self.colidiu = False # collision status 
-        self.impulsionando = False # whether the rocket has thrust
-        self.acelerador = 1 # Controls the rocket's thrust 
-        self.altura = 12
+        self.impulsionando = False # checks engine status 
+        self.acelerador = 1 # controls the rocket's thrust 
+        self.cor = BRANCO 
+        self.altura = 12 # dimensions 
         self.largura = 5 
-        self.ingnited = False 
+        self.ingnited = False # checks if the engine has been activated before 
         self.explosion = None # explosion status 
         self.message = None # message status 
         self.last_time_update = time.perf_counter()
@@ -630,19 +630,20 @@ class Star:
     def __init__(self):
         self.x = random.randint(0, LARGURA)
         self.y = random.randint(0, ALTURA)
-        self.size = random.uniform(1, 2.2)
+        self.size = random.uniform(1, 2.2) 
         self.speed = random.uniform(0.2, 0.8)  # Falling speed
-        self.max_speed = self.speed
-        self.is_slowing = False
-        self.is_moving = True
-        self.speeding_up = False
+        self.max_speed = self.speed # max speed of the star 
+        self.is_slowing = False # if the star is slowing down 
+        self.is_moving = True # if it's still moving 
+        self.speeding_up = False # if the speed is increasing 
         self.brightness = random.randint(150, 255)
         self.twinkle_speed = random.uniform(2, 4)
 
     def update(self):
         """
-        Updates the speed of the stars and theirs position 
+        Updates the star's speed, posititon and brightness 
         """
+        # If the speed is zero, stop all movements 
         if self.speed == 0:
             self.is_slowing = False
             self.is_moving = False
@@ -651,7 +652,7 @@ class Star:
         if self.is_slowing:
             self.speed *= 0.996
             if abs(self.speed) < 0.002:
-                self.speed = 0
+                self.speed = 0 # stop movement when the speed is very low 
                 self.is_moving = False
                 self.is_slowing = False
 
@@ -697,7 +698,6 @@ class Star:
         self.speed = random.uniform(0.1, 0.2)
         self.is_moving = True
         self.speeding_up = True
-
 
 def title_screen():
     """
