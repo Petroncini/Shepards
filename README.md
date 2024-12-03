@@ -140,7 +140,7 @@ $$\begin{equation}
 \dot{v}_x(t) + \frac{1}{k_1} \cdot {v}_x(t) + k_2 = 0
 \end{equation}$$
 
-Agora, utilizando uma mudança de variável dependente $$v_z$$ para $$u = k_1^{-1}v_x + k_2$$. Vamos calcular $$\dot{v}_x$$ em relação a $$u$$. 
+Agora, utilizando uma mudança de variável dependente $$v_x$$ para $$u = k_1^{-1}v_x + k_2$$. Vamos calcular $$\dot{v}_x$$ em relação a $$u$$. 
 
 $$\begin{equation}
 \dot{v}_x = u \cdot k_1 - g 
