@@ -93,7 +93,7 @@ $$\begin{equation}
 \end{equation}$$
 
 $$\begin{equation}
-\ddot{y}(t) \cdot m \hat{j} = \text{IMPULSO} \cdot \cos{\theta} \hat{j} - b \cdot v_y(t) \hat{j} - m \cdot g
+\ddot{y}(t) \cdot m \hat{j} = \text{IMPULSO} \cdot \cos{\theta} \hat{j} - b \cdot v_y(t) \hat{j} - m \cdot k_2
 \end{equation}$$
 
 Vamos simplificar a primeira (eixo x):
@@ -143,7 +143,7 @@ $$\begin{equation}
 Agora, utilizando uma mudança de variável dependente $$v_x$$ para $$u = k_1^{-1}v_x + k_2$$. Vamos calcular $$\dot{v}_x$$ em relação a $$u$$. 
 
 $$\begin{equation}
-\dot{v}_x = u \cdot k_1 - g 
+\dot{v}_x = u \cdot k_1 - k_2
 \end{equation}$$
 
 $$\begin{equation}
@@ -196,15 +196,16 @@ O jogo foi desenvolvido em Python utilizando a biblioteca Pygame, uma ferramenta
 ## Como usar:
 - **Instalação e Dependências:** 
     ```bash
+    git clone https://github.com/Petroncini/Shepards
+    
     pip install pygame
 
-    sudo apt-get install git-lfs
-    git lfs pull
+    python hawk9.py
 - **Como jogar**
 
 Para jogar, aperte a tecla espaço ou clique o mouse na tela inicial. Depois disso, escolha um dos 6 planetas onde você pode realizar o pouso. Cada um tem condições gravitacionais e atmosféricas diferentes.
 
-O objetivo principal é pousar o foguete na plataforma ao centro da tela, controlando a rotação e o propulsor da nave. Você pode rotacionar o foguete com as setas esquerda e direita do teclado e ativar o propulsor com a tecla espaço. Depois de ativado, o propulsor pode ser desativando acionando novamente a tecla espaço. Mas cuidado, depois de desativado, o motor não pode ser reativado. Para diminuir e aumetar a potência do motor, utilize as teclas Q e E. Para abortar um voo, precione a tecla A. 
+O objetivo principal é pousar o foguete na plataforma ao centro da tela, controlando a rotação e o propulsor da nave. Você pode rotacionar o foguete com as setas esquerda e direita do teclado e ativar o propulsor com a tecla espaço. Depois de ativado, o propulsor pode ser desativando acionando novamente a tecla espaço. Mas cuidado, depois de desativado, o motor não pode ser reativado. Para diminuir e aumetar a potência do motor, utilize as teclas Q e E. Para abortar um voo, precione a tecla A. Se desafie a pousar com a trajetória oculta pressionando a tecla T.
 
 Para o pouso se bem sucedido, é necessário fazer contato com a plataforma com velocidade relativa menor que 50 e com ângulo próximo de 90 graus.
 
