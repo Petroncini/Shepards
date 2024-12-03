@@ -214,5 +214,7 @@ Para voltar para a tela de seleção de planetas basta apertar Esc.
 Boa sorte!
 
 ## Referências:
+
 * Apostila de Dinâmica do Professor Esmerindo Bernardes
 * Aulas da Professora Krissia de Zawadzki
+* Wikipedia para constantes planetárias e do foguete (inspirado no Spacex Falcon 9)
