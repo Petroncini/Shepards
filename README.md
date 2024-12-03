@@ -49,11 +49,11 @@ Podemos modelor tal força dessa forma em nosso sistema:
 Podemos decompor essa força da seguinte forma:
 
 $$\begin{equation}
-\vec{F}_{propu x} = \text{IMPULSO} \cdot \sin{\theta} \hat{i}
+\vec{F}_{propu x} = \text{FORCA} \cdot \sin{\theta} \hat{i}
 \end{equation}$$
 
 $$\begin{equation}
-\vec{F}_{propu y} = \text{IMPULSO} \cdot \cos{\theta} \hat{j}
+\vec{F}_{propu y} = \text{FORCA} \cdot \cos{\theta} \hat{j}
 \end{equation}$$
 
 Em que $\theta$ é o ângulo, definido pelo jogador, que o foguete foi rotacionado.
