@@ -143,7 +143,7 @@ $$\begin{equation}
 Agora, utilizando uma mudança de variável dependente $$v_x$$ para $$u = k_1^{-1}v_x + k_2$$. Vamos calcular $$\dot{v}_x$$ em relação a $$u$$. 
 
 $$\begin{equation}
-\dot{v}_x = u \cdot k_1 - g 
+\dot{v}_x = u \cdot k_1 - k_2
 \end{equation}$$
 
 $$\begin{equation}
