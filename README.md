@@ -93,7 +93,7 @@ $$\begin{equation}
 \end{equation}$$
 
 $$\begin{equation}
-\ddot{y}(t) \cdot m \hat{j} = \text{IMPULSO} \cdot \cos{\theta} \hat{j} - b \cdot v_y(t) \hat{j} - m \cdot g
+\ddot{y}(t) \cdot m \hat{j} = \text{IMPULSO} \cdot \cos{\theta} \hat{j} - b \cdot v_y(t) \hat{j} - m \cdot k_2
 \end{equation}$$
 
 Vamos simplificar a primeira (eixo x):
