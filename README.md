@@ -89,25 +89,25 @@ $$\begin{equation}
 Substituindo, temos:
 
 $$\begin{equation}
-\ddot{x}(t) \cdot m \hat{i} = \text{IMPULSO} \cdot \sin{\theta} \hat{i} - b \cdot v_x(t) \hat{i}
+\ddot{x}(t) \cdot m \hat{i} = \text{FORCA} \cdot \sin{\theta} \hat{i} - b \cdot v_x(t) \hat{i}
 \end{equation}$$
 
 $$\begin{equation}
-\ddot{y}(t) \cdot m \hat{j} = \text{IMPULSO} \cdot \cos{\theta} \hat{j} - b \cdot v_y(t) \hat{j} - m \cdot k_2
+\ddot{y}(t) \cdot m \hat{j} = \text{FORCA} \cdot \cos{\theta} \hat{j} - b \cdot v_y(t) \hat{j} - m \cdot k_2
 \end{equation}$$
 
 Vamos simplificar a primeira (eixo x):
 
 $$\begin{equation}
-\ddot{x}(t) \cdot m = \text{IMPULSO} \cdot \sin{\theta} - b \cdot v_x(t)
+\ddot{x}(t) \cdot m = \text{FORCA} \cdot \sin{\theta} - b \cdot v_x(t)
 \end{equation}$$
 
 $$\begin{equation}
-\ddot{x}(t) \cdot m + b \cdot \dot{x}(t) \cdot \sin{\theta} = \text{IMPULSO} \cdot \sin{\theta},
+\ddot{x}(t) \cdot m + b \cdot \dot{x}(t) \cdot \sin{\theta} = \text{FORCA} \cdot \sin{\theta},
 \end{equation}$$
 
 $$\begin{equation}
-\text{Assumindo: } k_1 = \frac{m}{b.\sin{\theta}} \text{, } k_2 = -\frac{\text{IMPULSO} \cdot \sin{\theta}}{m},
+\text{Assumindo: } k_1 = \frac{m}{b.\sin{\theta}} \text{, } k_2 = -\frac{\text{FORCA} \cdot \sin{\theta}}{m},
 \end{equation}$$
 
 $$\begin{equation}
@@ -117,15 +117,15 @@ $$\begin{equation}
 Agora, vamos simplificar a segunda (eixo y):
 
 $$\begin{equation}
-\ddot{y}(t) \cdot m = \text{IMPULSO} \cdot \cos{\theta} - b \cdot v_y(t) - m \cdot g
+\ddot{y}(t) \cdot m = \text{FORCA} \cdot \cos{\theta} - b \cdot v_y(t) - m \cdot g
 \end{equation}$$
 
 $$\begin{equation}
-\ddot{y}(t) \cdot m + b \cdot \dot{y}(t) \cdot \cos{\theta} = \text{IMPULSO} \cdot \cos{\theta} - m \cdot g,
+\ddot{y}(t) \cdot m + b \cdot \dot{y}(t) \cdot \cos{\theta} = \text{FORCA} \cdot \cos{\theta} - m \cdot g,
 \end{equation}$$
 
 $$\begin{equation}
-\text{Assumindo: } k'_1 = \frac{m}{b.\cos{\theta}} \text{, } k'_2 = -\frac{\text{IMPULSO} \cdot \cos{\theta}}{m} - g,
+\text{Assumindo: } k'_1 = \frac{m}{b.\cos{\theta}} \text{, } k'_2 = -\frac{\text{FORCA} \cdot \cos{\theta}}{m} - g,
 \end{equation}$$
 
 $$\begin{equation}
