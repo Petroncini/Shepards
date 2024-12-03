@@ -42,6 +42,7 @@ COEFICIENTE_ARRASTO = 1000
 FUEL_WEIGHT = 1300
 DRY_MASS = 22000
 DROPOFF_RATE = 1200
+SHOW_TRAJECTORY = True
 
 VELOCIDADE_INICIAL = random.uniform(150, 200)
 
@@ -469,7 +470,7 @@ def create_gradient_surface(width, height, background_color):
 
 def game(planet):
     # Initializes the game 
-    global GRAVIDADE, DENSIDADE_AR, PAD_COLOR
+    global GRAVIDADE, DENSIDADE_AR, PAD_COLOR, SHOW_TRAJECTORY
     GRAVIDADE = planet.gravity
     DENSIDADE_AR = planet.density
     PAD_COLOR = planet.pad_color
@@ -490,7 +491,7 @@ def game(planet):
         screen.blit(gradient_background, (0, 0))
         
         for star in stars:
-            #star.speed = 0
+            star.speed = 0
             star.update()
             star.draw(screen)
         
@@ -505,6 +506,8 @@ def game(planet):
                 if event.key == pygame.K_SPACE and qtd_impulsos:
                     qtd_impulsos -= 1
                     rocket.aplicar_impulso()
+                if event.key == pygame.K_t:
+                    SHOW_TRAJECTORY = not SHOW_TRAJECTORY
             # Tracks mouse's clicks 
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
@@ -529,7 +532,6 @@ def game(planet):
                 end_game(rocket, "Flight Terminated", True)
                 game_over = True
             
-
             
         rocket.update()
 
@@ -568,7 +570,8 @@ def game(planet):
 
         if rocket.explosion is None:
             # Draws trajectory, flame and rocket 
-            rocket.desenhar_trajetoria(screen)
+            if SHOW_TRAJECTORY:
+                rocket.desenhar_trajetoria(screen)
             rocket.draw_flame(screen)
             rocket.draw(screen)
             """
@@ -621,7 +624,7 @@ class Star:
         self.x = random.randint(0, LARGURA)
         self.y = random.randint(0, ALTURA)
         self.size = random.uniform(1, 2.2)
-        self.speed = random.uniform(0.2, 0.8)  # Falling speed
+        self.speed = random.uniform(0.2, 0.6)  # Falling speed
         self.max_speed = self.speed
         self.is_slowing = False
         self.is_moving = True
@@ -639,8 +642,8 @@ class Star:
             self.speeding_up = False
 
         if self.is_slowing:
-            self.speed *= 0.996
-            if abs(self.speed) < 0.002:
+            self.speed *= 0.998
+            if abs(self.speed) < 0.0025:
                 self.speed = 0
                 self.is_moving = False
                 self.is_slowing = False
@@ -651,8 +654,8 @@ class Star:
                 self.y = random.randint(-ALTURA, 0)
                 self.x = random.randint(0, LARGURA)
                 self.size = random.randint(1, 2)
-                if not self.is_slowing:
-                    self.speed = random.uniform(0.2, 0.8)
+                # if not self.is_slowing:
+                #     self.speed = random.uniform(0.2, 0.8)
 
         if self.speeding_up:
             self.speed *= 1.001
@@ -681,7 +684,7 @@ class Star:
         self.is_slowing = True
 
     def speed_up(self):
-        self.speed = random.uniform(0.1, 0.2)
+        self.speed = random.uniform(0.06, 0.08)
         self.is_moving = True
         self.speeding_up = True
 
@@ -719,11 +722,12 @@ def title_screen():
                 pygame.quit()
                 sys.exit()
             if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+                if event.key == K_ESCAPE or event.key == KMOD_CTRL and event.key == K_q:
                     pygame.quit()
                     sys.exit()
                 if event.key == K_SPACE or event.key == K_RETURN:
                     menu()
+                
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     menu()
@@ -809,11 +813,11 @@ def menu():
                 pygame.quit()
                 sys.exit()
             if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+                if event.key == K_q and event.key == KMOD_CTRL:
                     pygame.quit()
                     sys.exit()
-                if event.key == K_BACKSPACE:
-                    return
+                if event.key == K_BACKSPACE or event.key == K_ESCAPE:
+                    title_screen()
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     for button_rect, button in button_rects:
@@ -833,7 +837,7 @@ def transition(planet):
             star.update()
             star.draw(screen)
 
-        if abs(star.speed) > 0:
+        if abs(star.speed) > 0.002:
                 stars_stopped = False
         else:
             stars_stopped = True
@@ -853,6 +857,8 @@ def transition(planet):
                 sys.exit()
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
+                    return
+                if event.key == K_q and event.key == KMOD_CTRL:
                     pygame.quit()
                     sys.exit()
                 if event.key == K_BACKSPACE:
