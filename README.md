@@ -40,7 +40,7 @@ $$\begin{equation}
 #### Força de propulsão do foguete
 Fora da simulação, um foguete queima seu combustível, expelindo gases, para conseguir, por meio da 3º Lei de Newton, gerar uma
 força de reação, que por sua vez propele o foguete na direção desejada.
-Análogo à isso, nosso jogo usa um IMPULSO do combustível de $500000 \frac{kg.m}{s^2}$, que, ao o jogador acionar o propulsor,
+Análogo à isso, nosso jogo usa uma força do combustível de $7600000 \frac{kg.m}{s^2}$, que, ao o jogador acionar o propulsor,
 gera uma força que propulsiona o foguete.
 Podemos modelor tal força dessa forma em nosso sistema:
 <p align="center">
