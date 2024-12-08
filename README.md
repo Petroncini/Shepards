@@ -74,8 +74,15 @@ $$\begin{equation}
 \vec{a}(t) = \ddot{x} (t) \hat{i} + \ddot{y} (t) \hat{j}
 \end{equation}$$
 
+### Método usado na simulação
+Para a nossa simulação, nós usamos o método de Euler, atualizando a posição e velocidade do nosso foguete com base nas forças que estão agindo sobre ele.
+Tal processo é feito pelo método update da classe Rocket.
+O primeiro passo é calcular o $\text{dt}$, então multiplicamos ele, junto com nosso fator de escala, para termos o acréscimo da nossa posição.
+O segundo passo é calcularmos a nossa força viscosa, para então usar ela para termos o decréscimo da nossa velocidade.
+Por último, verificamos se o foguete está com o propulsor ativado, e usamos a força dele para atualizar nossa velocidade e massa.
+
 ### EDOs
-A resolução das EDO's apresentada a seguir é uma versão simplificada do movimento que acontece no jogo, pois não consideramos a massa nem a gravidade como quantidades variáveis. Portanto, note que a EDO é solucionada considerando a massa e a gravidade como constantes. 
+A resolução das EDO's apresentada a seguir é uma versão simplificada do movimento que acontece no jogo, pois não consideramos a massa nem a gravidade como quantidades variáveis. Portanto, note que a EDO é solucionada considerando a massa e a gravidade como constantes, sendo apenas uma representação de como seria essa solução e não o que é aplicado no código.
 Aplicando a 2ª lei de Newton, conseguimos deduzir as seguintes EDOs do nosso sistema:
 
 $$\begin{equation}
